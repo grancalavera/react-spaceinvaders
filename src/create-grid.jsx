@@ -1,6 +1,6 @@
 export default function createGrid(rows, cols) {
 
-  return { getCoords: getCoords, length: length }
+  return { getCoords: getCoords, length: rows * cols }
 
   function getCoords(n) {
     return {
@@ -8,9 +8,4 @@ export default function createGrid(rows, cols) {
       , y: Math.floor(n / cols)
     }
   }
-
-  function length() {
-    return rows * cols
-  }
-
 }

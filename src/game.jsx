@@ -11,22 +11,20 @@ function world() {
     , cellHeight = 64
     , cols = 11
     , rows = 10
-    , enemyRows = 6
-    , enemyCols = 9
-    , enemyGrid = createGrid(enemyRows, enemyCols)
+    , enemyGrid = createGrid(6, 9)
+    , enemies = R.range(0, enemyGrid.length).map(enemy)
     , hero =
       {
         top: rows * cellHeight - cellHeight
       , left: cols * cellWidth / 2 - cellWidth / 2
       }
-    , enemies = R.range(0, enemyGrid.length()).map(enemy)
 
   return { hero: hero, enemies: enemies }
 
   function enemy(i) {
     let coords = enemyGrid.getCoords(i)
     return {
-      key: `enemy-${coords.x}-${coords.y}`
+      key: `enemy-${ coords.x }-${ coords.y }`
     , type: coords.y % 3
     , left: coords.x * cellWidth + cellWidth
     , top: coords.y * cellHeight
