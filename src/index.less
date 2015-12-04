@@ -1,0 +1,55 @@
+@width: 64px;
+@height: @width;
+@columns: 10;
+@rows: 10;
+
+body, html {
+  background-color: black;
+  color: white;
+}
+
+#stage {
+  margin: 20px auto 0;
+  border: 1px solid white;
+  width: @width * @columns;
+  height: @height * @rows;
+  position: relative;
+}
+
+.debug .sprite {
+  border: 1px solid red;
+}
+
+.sprite {
+  width: @width;
+  height: @height;
+  background-image: url('/assets/enemies-and-hero.png');
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.enemy.one {
+  background-position-y: 0;
+}
+
+.enemy.two {
+  background-position-y: -@height;
+}
+
+.enemy.three {
+  background-position-y: -@height * 2;
+}
+
+.flip {
+  background-position-x: -@width;
+}
+
+.hero {
+  background-position-y: -@height * 3;
+}
+
+.explosion {
+  background-position: -@width -@height * 3;
+}

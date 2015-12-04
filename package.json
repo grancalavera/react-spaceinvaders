@@ -1,0 +1,33 @@
+{
+  "name": "react-spaceinvaders",
+  "version": "0.0.0",
+  "description": "Space Invaders made with React and stuff...",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm run less",
+    "start": "browser-sync start --server --files *.html,*.css,*.js",
+    "watch": "watch 'npm run build' src",
+    "build": "npm run less && npm run react",
+    "less": "lessc src/index.less index.css",
+    "react": "browserify -t [ babelify --presets [ es2015 react ] ] src/index.js -o index.js"
+  },
+  "author": "leoncoto@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-react": "^6.1.18",
+    "babelify": "^7.2.0",
+    "browser-sync": "^2.10.0",
+    "less": "^2.5.3",
+    "normalize.css": "^3.0.3",
+    "rimraf": "^2.4.4",
+    "watch": "^0.16.0"
+  },
+  "dependencies": {
+    "ramda": "^0.18.0",
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3",
+    "react-redux": "^4.0.0",
+    "redux": "^3.0.4"
+  }
+}
