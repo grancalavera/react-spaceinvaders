@@ -1,1 +1,1 @@
-import './stage.jsx'
+import './game.jsx'

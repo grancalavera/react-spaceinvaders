@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "less": "lessc src/index.less index.css",
-    "start": "webpack-dev-server --progress --colors"
+    "start": "npm run less && webpack-dev-server --progress --colors"
   },
   "author": "leoncoto@gmail.com",
   "license": "MIT",
@@ -22,6 +22,8 @@
     "normalize.css": "^3.0.3",
     "ramda": "^0.18.0",
     "react": "^0.14.3",
-    "react-dom": "^0.14.3"
+    "react-dom": "^0.14.3",
+    "react-redux": "^4.0.0",
+    "redux": "^3.0.4"
   }
 }
