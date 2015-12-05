@@ -1,31 +1,13 @@
 import React from 'react'
-import ReactDom from 'react-dom'
 import Enemy from './enemy.jsx'
 import Hero from './hero.jsx'
-import createGrid from './create-grid.jsx'
-import R from 'ramda'
 
-const width     = 64
-    , height    = 64
-    , cols      = 11
-    , rows      = 10
-    , enemyRows = 6
-    , enemyCols = 9
-    , grid      = createGrid(enemyRows, enemyCols)
+export default function Stage(props) {
+  let hero = props.world.hero
+    , enemies = props.world.enemies
 
-function enemy(i) {
-  let coords = grid.getCoords(i)
-    , key = `enemy-${coords.x}-${coords.y}`
-    , type = coords.y % 3
-    , left = width + coords.x  * width
-    , top = coords.y * height
-  return <Enemy type={ type } key={ key } top={ top } left={ left } />
-}
-
-ReactDom.render(
-  <div>
-    { R.range(0, enemyCols * enemyRows).map(enemy) }
-    <Hero top={ rows * height - height } left={ cols * width / 2 - width / 2 } />
+  return <div>
+    { enemies.map(e => <Enemy type={ e.type } key={ e.key } top={ e.top } left={ e.left } flip={ e.flip } /> )}
+    <Hero top={ hero.top } left={ hero.left } />
   </div>
-  , document.getElementById('stage')
-)
+}

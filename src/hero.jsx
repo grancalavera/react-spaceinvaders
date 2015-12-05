@@ -5,12 +5,14 @@ export default function Hero(props) {
   return <div className="sprite hero" style={ style }></div>
 }
 
-Hero.defaultProps = {
-  top: 0
-, left: 0
-}
+Hero.defaultProps =
+  {
+    top: 0
+  , left: 0
+  }
 
-Hero.propTypes = {
-  top: React.PropTypes.number
-, left: React.PropTypes.number
-}
+Hero.propTypes =
+  {
+    top: React.PropTypes.number
+  , left: React.PropTypes.number
+  }

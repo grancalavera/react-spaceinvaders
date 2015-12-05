@@ -2,11 +2,11 @@ var path = require('path')
   , webpack = require('webpack')
 
 module.exports = {
-  entry: './src/index.jsx'
+  entry: './src/main.jsx'
 , output:
   {
     path: __dirname
-  , filename: 'index.js'
+  , filename: 'space-invaders.js'
   }
 , module:
   {
