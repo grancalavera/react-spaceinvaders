@@ -2,10 +2,11 @@
   "name": "react-spaceinvaders",
   "version": "0.0.0",
   "description": "Space Invaders made with React and stuff...",
-  "main": "index.js",
+  "main": "space-invaders.js",
   "scripts": {
-    "less": "lessc src/index.less index.css",
-    "start": "npm run less && webpack-dev-server --progress --colors"
+    "less": "lessc src/main.less space-invaders.css",
+    "start": "npm run less && webpack-dev-server --progress --colors",
+    "test": "tap test/*.test.js"
   },
   "author": "leoncoto@gmail.com",
   "license": "MIT",
@@ -14,6 +15,7 @@
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
+    "deep-freeze": "0.0.1",
     "less": "^2.5.3",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0"
@@ -24,6 +26,7 @@
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-redux": "^4.0.0",
-    "redux": "^3.0.4"
+    "redux": "^3.0.4",
+    "tap": "^2.3.1"
   }
 }
