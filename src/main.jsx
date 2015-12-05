@@ -33,22 +33,24 @@ const defaultHero = {
 , direction: 0
 }
 
+const updateEnemy = (state, action) => {
+  let resetBeat = state.beat >= 500
+    , e = {
+        beat: resetBeat ? 0 : state.beat + action.elapsedTime
+      , flip: resetBeat ? !state.flip : state.flip
+      }
+  return  Object.assign({}, state, e)
+}
+
+const updateHero = (state, action) => {
+  let h = { left: state.left + state.direction * heroSpeed }
+  return Object.assign({}, state, h)
+}
+
 const enemies = (state = defaultEnemies, action) => {
   switch (action.type) {
     case 'UPDATE':
-      return state.map( e => {
-        let newE = { beat: e.beat + action.elapsedTime }
-        if (newE.beat >= 500) {
-          newE.beat = 0
-          newE.flip = !e.flip
-          if (e.index == 0) {
-            console.log('change beat')
-            console.log(newE.beat)
-            console.log(newE.flip)
-          }
-        }
-        return Object.assign({}, e, newE)
-      })
+      return state.map(e => updateEnemy(e, action))
     default:
       return state
   }
@@ -59,7 +61,7 @@ const hero = (state = defaultHero, action) => {
     case 'MOVE':
       return Object.assign({}, state, { direction: action.direction })
     case 'UPDATE':
-      return Object.assign({}, state, { left: state.left + state.direction * heroSpeed })
+      return updateHero(state, action)
     default:
       return state
   }
