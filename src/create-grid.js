@@ -1,11 +1,11 @@
-'use strict';
+import R from 'ramda'
 
-module.exports = (rows, cols) => {
-  return { getCoords: getCoords }
-  function getCoords(n) {
-    return {
-        x: n % cols
-      , y: Math.floor(n / cols)
-    }
-  }
+const createGrid = (rows, cols) => {
+  const length    = rows * cols
+      , cells     = R.range(0, length)
+      , getCoords = n => ({ x: n % cols, y: Math.floor(n / cols) })
+
+  return { getCoords, length, cells }
 }
+
+export default createGrid

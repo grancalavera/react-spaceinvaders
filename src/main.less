@@ -1,7 +1,7 @@
 @width: 64px;
 @height: @width;
-@columns: 10;
-@rows: 10;
+@rows: 7;
+@cols: 11;
 
 body, html {
   background-color: black;
@@ -9,9 +9,9 @@ body, html {
 }
 
 #stage {
-  margin: 20px auto 0;
+  margin: 0 auto;
   border: 1px solid white;
-  width: @width * @columns;
+  width: @width * @cols;
   height: @height * @rows;
   position: relative;
 }
@@ -52,4 +52,11 @@ body, html {
 
 .explosion {
   background-position: -@width -@height * 3;
+}
+
+.bullet {
+  position: absolute;
+  background-color: white;
+  width: @width / 16;
+  height: @height / 4;
 }
