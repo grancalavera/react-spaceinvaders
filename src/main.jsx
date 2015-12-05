@@ -4,9 +4,9 @@ import { createStore, combineReducers } from 'redux'
 import hero from './hero-reducer'
 import enemies from './enemies-reducer'
 import dirty from './update-reducer'
-import Stage from './stage.jsx'
 import createControls from './create-controls'
 import createGameLoop from './create-game-loop'
+import Stage from './stage.jsx'
 
 const spaceInvaders = combineReducers({
   enemies
@@ -25,10 +25,11 @@ createGameLoop(store.dispatch)
 
 store.subscribe(() => {
   if (store.getState().dirty) {
-    store.dispatch({type: 'DID_UPDATE'})
     render()
+    store.dispatch({type: 'DID_UPDATE'})
   }
 })
+
 render()
 
 // expect library to make simple tests

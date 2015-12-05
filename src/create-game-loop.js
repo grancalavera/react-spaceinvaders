@@ -1,4 +1,3 @@
-
 const createGameLoop = (onUpdate = () => {}) => {
   let stop = false
 
