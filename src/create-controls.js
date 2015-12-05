@@ -1,4 +1,4 @@
-const createControls = (onMoveChange = () => {}, onFire = () => {}) => {
+const createControls = (onChange = () => {}) => {
 
   const LEFT  = 37
       , RIGHT = 39
@@ -7,13 +7,13 @@ const createControls = (onMoveChange = () => {}, onFire = () => {}) => {
   const onKeydown = e => {
     switch (e.keyCode) {
       case LEFT:
-        onMoveChange({type: 'MOVE', direction: 'LEFT'})
+        onChange({type: 'MOVE', direction: -1})
         break
       case RIGHT:
-        onMoveChange({type: 'MOVE', direction: 'RIGHT'})
+        onChange({type: 'MOVE', direction: 1})
         break
       case SPACE:
-        onFire({type: 'FIRE'})
+        onChange({type: 'FIRE'})
         break
     }
   }
@@ -22,7 +22,7 @@ const createControls = (onMoveChange = () => {}, onFire = () => {}) => {
     switch (e.keyCode) {
       case LEFT:
       case RIGHT:
-        onMoveChange({type: 'MOVE', direction: 'STOP'})
+        onChange({type: 'MOVE', direction: 0})
         break
     }
   }
