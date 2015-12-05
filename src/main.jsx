@@ -9,7 +9,6 @@ import {
 , worldWidth
 , worldHeight
 , enemyGrid
-, heroSpeed
 } from './config.js'
 import createControls from './create-controls.js'
 import createGameLoop from './create-game-loop.js'
@@ -38,7 +37,7 @@ const updateEnemy = (state, action) => {
       , flip: beat ? !state.flip : state.flip
       , beatPeriod: beatFaster ? state.beatPeriod - state.beatFasterBy : state.beatPeriod
       }
-  if (state.index == 0) console.log(beatFaster, e.beatPeriod)
+
   return  Object.assign({}, state, e)
 }
 
@@ -46,11 +45,18 @@ const defaultHero = {
   top: worldHeight - cellHeight
 , left: worldWidth / 2 - cellWidth / 2
 , direction: 0
+, minLeft: 0
+, maxLeft: worldWidth - cellWidth
+, speed: 7
 }
 
 const updateHero = (state, action) => {
-  let h = { left: state.left + state.direction * heroSpeed }
-  return Object.assign({}, state, h)
+  const left = (l) => {
+    if (l < state.minLeft) return state.minLeft
+    if (l > state.maxLeft) return state.maxLeft
+    return l
+  }
+  return Object.assign({}, state, { left: left(state.left + state.direction * state.speed ) })
 }
 
 const enemies = (state = defaultEnemies, action) => {
@@ -114,5 +120,4 @@ render()
 // Object.assign to update objects
 // a reducer must return the current state for any unknown action
 // in the example the store is passed to the component in the view :|
-
 // move sets the hero to move, but does not render

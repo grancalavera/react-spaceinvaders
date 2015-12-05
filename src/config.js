@@ -7,7 +7,6 @@ const cellWidth = 64
     , worldWidth = cellWidth * cols
     , worldHeight = cellHeight * rows
     , enemyGrid = createGrid(4, 9)
-    , heroSpeed = 5
 
 export {
   cellWidth
@@ -15,5 +14,4 @@ export {
 , worldWidth
 , worldHeight
 , enemyGrid
-, heroSpeed
 }
