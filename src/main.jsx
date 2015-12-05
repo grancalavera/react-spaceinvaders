@@ -21,6 +21,9 @@ const defaultEnemies = enemyGrid.cells.map(i => {
   , type: coords.y % 3
   , left: coords.x * cellWidth + cellWidth
   , top: coords.y * cellHeight
+  , flip: false
+  , beat: 0
+  , index: i
   }
 })
 
@@ -33,6 +36,19 @@ const defaultHero = {
 const enemies = (state = defaultEnemies, action) => {
   switch (action.type) {
     case 'UPDATE':
+      return state.map( e => {
+        let newE = { beat: e.beat + action.elapsedTime }
+        if (newE.beat >= 500) {
+          newE.beat = 0
+          newE.flip = !e.flip
+          if (e.index == 0) {
+            console.log('change beat')
+            console.log(newE.beat)
+            console.log(newE.flip)
+          }
+        }
+        return Object.assign({}, e, newE)
+      })
     default:
       return state
   }
