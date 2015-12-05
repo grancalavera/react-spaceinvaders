@@ -1,4 +1,4 @@
-import createGrid from './create-grid.js'
+import createGrid from './create-grid'
 
 const cellWidth = 64
     , cellHeight = 64
