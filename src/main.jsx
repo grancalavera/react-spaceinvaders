@@ -22,24 +22,30 @@ const defaultEnemies = enemyGrid.cells.map(i => {
   , left: coords.x * cellWidth + cellWidth
   , top: coords.y * cellHeight
   , flip: false
-  , beat: 0
+  , elapsedTime: 0
   , index: i
+  , beatPeriod: 1000
+  , fastestBeat: 50
+  , beatFasterBy: 0.2 // this really should depend on how many enemies are still alive
   }
 })
+
+const updateEnemy = (state, action) => {
+  let beat = state.elapsedTime >= state.beatPeriod
+    , beatFaster = state.beatPeriod > state.fastestBeat
+    , e = {
+        elapsedTime: beat ? 0 : state.elapsedTime + action.elapsedTime
+      , flip: beat ? !state.flip : state.flip
+      , beatPeriod: beatFaster ? state.beatPeriod - state.beatFasterBy : state.beatPeriod
+      }
+  if (state.index == 0) console.log(beatFaster, e.beatPeriod)
+  return  Object.assign({}, state, e)
+}
 
 const defaultHero = {
   top: worldHeight - cellHeight
 , left: worldWidth / 2 - cellWidth / 2
 , direction: 0
-}
-
-const updateEnemy = (state, action) => {
-  let resetBeat = state.beat >= 500
-    , e = {
-        beat: resetBeat ? 0 : state.beat + action.elapsedTime
-      , flip: resetBeat ? !state.flip : state.flip
-      }
-  return  Object.assign({}, state, e)
 }
 
 const updateHero = (state, action) => {
