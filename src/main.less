@@ -1,7 +1,7 @@
 @width: 64px;
 @height: @width;
-@columns: 11;
-@rows: 10;
+@rows: 7;
+@cols: 11;
 
 body, html {
   background-color: black;
@@ -9,9 +9,9 @@ body, html {
 }
 
 #stage {
-  margin: 20px auto 0;
+  margin: 0 auto;
   border: 1px solid white;
-  width: @width * @columns;
+  width: @width * @cols;
   height: @height * @rows;
   position: relative;
 }

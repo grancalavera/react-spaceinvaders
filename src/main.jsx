@@ -10,6 +10,7 @@ import {
 , worldHeight
 , enemyGrid
 } from './config.js'
+import createControls from './create-controls.js'
 
 const defaultEnemies = enemyGrid.cells.map(i => {
   let coords = enemyGrid.getCoords(i)
@@ -49,7 +50,16 @@ const spaceInvaders = combineReducers({
 
 const store = createStore(spaceInvaders)
 
-ReactDom.render(<Stage world={ store.getState() } />, document.getElementById('stage'))
+const render = () => {
+  ReactDom.render(<Stage world={ store.getState() } />, document.getElementById('stage'))
+}
+
+createControls(
+  action => { console.log(action)}
+, action => { console.log(action)}
+)
+
+render()
 
 // expect library to make simple tests
 // deep-freeze
@@ -57,3 +67,4 @@ ReactDom.render(<Stage world={ store.getState() } />, document.getElementById('s
 // slice to generate new arrays with changes on specific indices
 // Object.assign to update objects
 // a reducer must return the current state for any unknown action
+// in the example the store is passed to the component in the view :|
