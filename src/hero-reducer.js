@@ -5,30 +5,36 @@ import {
 , worldHeight
 } from './config'
 
-const defaultHero = {
+const minLeft = 0
+    , maxLeft = worldWidth - cellWidth
+    , speed = 7
+
+const defaultState = {
   top: worldHeight - cellHeight
 , left: worldWidth / 2 - cellWidth / 2
-, direction: 0
-, minLeft: 0
-, maxLeft: worldWidth - cellWidth
-, speed: 7
+, speed: 0
 }
 
-const updateHero = (state, action) => {
-  const left = (l) => {
-    if (l < state.minLeft) return state.minLeft
-    if (l > state.maxLeft) return state.maxLeft
+const move = (state, action) => {
+  return Object.assign({}, state, { speed: action.direction * speed })
+}
+
+const update = (state, action) => {
+  const left = () => {
+    let l = state.left + state.speed
+    if (l < minLeft) return minLeft
+    if (l > maxLeft) return maxLeft
     return l
   }
-  return Object.assign({}, state, { left: left(state.left + state.direction * state.speed ) })
+  return Object.assign({}, state, { left: left() })
 }
 
-const hero = (state = defaultHero, action) => {
+const hero = (state = defaultState, action) => {
   switch (action.type) {
     case 'MOVE':
-      return Object.assign({}, state, { direction: action.direction })
+      return move(state, action)
     case 'UPDATE':
-      return updateHero(state, action)
+      return update(state, action)
     default:
       return state
   }

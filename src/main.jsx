@@ -1,13 +1,12 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import Stage from './stage.jsx'
-import createGrid from './create-grid'
 import { createStore, combineReducers } from 'redux'
-import createControls from './create-controls'
-import createGameLoop from './create-game-loop'
 import hero from './hero-reducer'
 import enemies from './enemies-reducer'
 import dirty from './update-reducer'
+import Stage from './stage.jsx'
+import createControls from './create-controls'
+import createGameLoop from './create-game-loop'
 
 const spaceInvaders = combineReducers({
   enemies

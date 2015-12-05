@@ -1,18 +1,21 @@
+import createGrid from './create-grid'
+
 import {
   cellWidth
 , cellHeight
 , worldWidth
 , worldHeight
-, enemyGrid
 } from './config'
 
-const defaultEnemies = enemyGrid.cells.map(i => {
-  let coords = enemyGrid.getCoords(i)
+const grid = createGrid(3, 9)
+
+const defaultState = grid.cells.map(i => {
+  let coords = grid.getCoords(i)
   return {
     key: `enemy-${ i }`
   , type: coords.y % 3
   , left: coords.x * cellWidth + cellWidth
-  , top: coords.y * cellHeight
+  , top: coords.y * cellHeight + cellHeight
   , flip: false
   , elapsedTime: 0
   , index: i
@@ -22,7 +25,7 @@ const defaultEnemies = enemyGrid.cells.map(i => {
   }
 })
 
-const updateEnemy = (state, action) => {
+const update = (state, action) => {
   let beat = state.elapsedTime >= state.beatPeriod
     , beatFaster = state.beatPeriod > state.fastestBeat
     , e = {
@@ -30,14 +33,13 @@ const updateEnemy = (state, action) => {
       , flip: beat ? !state.flip : state.flip
       , beatPeriod: beatFaster ? state.beatPeriod - state.beatFasterBy : state.beatPeriod
       }
-
   return  Object.assign({}, state, e)
 }
 
-const enemies = (state = defaultEnemies, action) => {
+const enemies = (state = defaultState, action) => {
   switch (action.type) {
     case 'UPDATE':
-      return state.map(e => updateEnemy(e, action))
+      return state.map(e => update(e, action))
     default:
       return state
   }
