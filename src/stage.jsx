@@ -10,9 +10,26 @@ const Stage = props => {
     , heroBullets = props.world.heroBullets
 
   return <div className="cover">
-    { enemies.map(e => <Enemy type={ e.type } key={ e.key } top={ e.top } left={ e.left } flip={ e.flip } /> )}
-    <Hero top={ hero.top } left={ hero.left } />
-    { heroBullets.map(b => <Bullet key={ b.key } top={ b.top } left={ b.left }/> )}
+
+    { enemies.map(e => <Enemy
+        type={ e.type }
+        key={ e.key }
+        top={ e.top }
+        left={ e.left }
+        flip={ e.flip }
+        alive={ e.alive } />
+    )}
+
+    <Hero
+      top={ hero.top }
+      left={ hero.left } />
+
+    { heroBullets.map(b => <Bullet
+        key={ b.key }
+        top={ b.top }
+        left={ b.left }/>
+    )}
+
   </div>
 }
 

@@ -1,7 +1,7 @@
 const cellWidth = 64
     , cellHeight = 64
-    , rows = 8
-    , cols = 7
+    , rows = 12
+    , cols = 15
     , worldWidth = cellWidth * cols
     , worldHeight = cellHeight * rows
 

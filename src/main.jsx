@@ -17,12 +17,20 @@ const spaceInvaders = combineReducers({
 })
 
 const store = createStore(spaceInvaders)
+    , render = () => ReactDom.render(<Stage world={ store.getState() } />, document.getElementById('stage'))
+    , heroLeft = () => store.getState().hero.left
+    , heroBullet = () => store.getState().heroBullets[0]
+    , enemyList = () => store.getState().enemies
 
-const render = () => {
-  ReactDom.render(<Stage world={ store.getState() } />, document.getElementById('stage'))
+const checkCollisions = () => {
+  let bullet = heroBullet()
+  if (!bullet) return
+  enemyList().forEach( enemy => {
+    let v = enemy.top < bullet.top && bullet.top < enemy.top + enemy.height
+      , h = enemy.left < bullet.left && bullet.left < enemy.left + enemy.width
+    if (v && h) store.dispatch({ type: 'DESTROY', enemy: enemy })
+  })
 }
-
-const heroLeft = () => store.getState().hero.left
 
 createControls(action => {
   switch (action.type) {
@@ -40,6 +48,7 @@ store.subscribe(() => {
   if (store.getState().dirty) {
     render()
     store.dispatch({type: 'DID_UPDATE'})
+    checkCollisions()
   }
 })
 

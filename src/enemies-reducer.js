@@ -1,3 +1,4 @@
+import R from 'ramda'
 import createGrid from './create-grid'
 
 import {
@@ -24,6 +25,9 @@ const defaultState = grid.cells.map(i => {
   , beatPeriod: 500
   , fastestBeat: 50
   , beatFasterBy: 0 // this really should depend on how many enemies are still alive
+  , alive: true
+  , width: cellWidth
+  , height: cellHeight
   }
 })
 
@@ -40,7 +44,9 @@ const update = (state, action) => {
 
 const enemies = (state = defaultState, action) => {
   switch (action.type) {
-    case 'UPDATE':
+    case 'DESTROY':
+      return R.reject((e => e.key == action.enemy.key), state)
+     case 'UPDATE':
       return state.map(e => update(e, action))
     default:
       return state
