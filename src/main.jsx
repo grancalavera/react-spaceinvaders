@@ -3,6 +3,7 @@ import ReactDom from 'react-dom'
 import { createStore, combineReducers } from 'redux'
 import hero from './hero-reducer'
 import enemies from './enemies-reducer'
+import heroBullets from './hero-bullets-reducer'
 import dirty from './update-reducer'
 import createControls from './create-controls'
 import createGameLoop from './create-game-loop'
@@ -11,6 +12,7 @@ import Stage from './stage.jsx'
 const spaceInvaders = combineReducers({
   enemies
 , hero
+, heroBullets
 , dirty
 })
 
@@ -20,7 +22,18 @@ const render = () => {
   ReactDom.render(<Stage world={ store.getState() } />, document.getElementById('stage'))
 }
 
-createControls(store.dispatch)
+const heroLeft = () => store.getState().hero.left
+
+createControls(action => {
+  switch (action.type) {
+    case 'FIRE':
+      store.dispatch(Object.assign({}, action, { left: heroLeft() }))
+      break
+    default:
+      store.dispatch(action)
+  }
+})
+
 createGameLoop(store.dispatch)
 
 store.subscribe(() => {
@@ -40,3 +53,5 @@ render()
 // a reducer must return the current state for any unknown action
 // in the example the store is passed to the component in the view :|
 // move sets the hero to move, but does not render
+// probably it would be much easier to put all the sprites in a single array
+// and then just pass them down to the view layer

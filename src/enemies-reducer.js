@@ -5,9 +5,11 @@ import {
 , cellHeight
 , worldWidth
 , worldHeight
+, cols
+, rows
 } from './config'
 
-const grid = createGrid(3, 9)
+const grid = createGrid(rows - 5, cols - 2)
 
 const defaultState = grid.cells.map(i => {
   let coords = grid.getCoords(i)
@@ -19,9 +21,9 @@ const defaultState = grid.cells.map(i => {
   , flip: false
   , elapsedTime: 0
   , index: i
-  , beatPeriod: 1000
+  , beatPeriod: 500
   , fastestBeat: 50
-  , beatFasterBy: 0.2 // this really should depend on how many enemies are still alive
+  , beatFasterBy: 0 // this really should depend on how many enemies are still alive
   }
 })
 
