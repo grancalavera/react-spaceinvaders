@@ -64,3 +64,5 @@ render()
 // move sets the hero to move, but does not render
 // probably it would be much easier to put all the sprites in a single array
 // and then just pass them down to the view layer
+// https://github.com/matthew-andrews/isomorphic-fetch
+// http://redux.js.org/docs/advanced/ExampleRedditAPI.html
