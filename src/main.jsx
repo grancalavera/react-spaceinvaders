@@ -17,6 +17,7 @@ const spaceInvaders = combineReducers({
 })
 
 const store = createStore(spaceInvaders)
+
     , render = () => ReactDom.render(<Stage world={ store.getState() } />, document.getElementById('stage'))
     , heroLeft = () => store.getState().hero.left
     , heroBullet = () => store.getState().heroBullets[0]
@@ -48,8 +49,8 @@ store.subscribe(() => {
   if (store.getState().dirty) {
     render()
     store.dispatch({type: 'DID_UPDATE'})
-    checkCollisions()
   }
+  checkCollisions()
 })
 
 render()
