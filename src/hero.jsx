@@ -1,5 +1,7 @@
 import React from 'react'
 
+// remember ({foo, bar, ...props})
+// const Hero = ({ top, left, ...props}) => {
 const Hero = props => {
   let style = { top: props.top, left: props.left }
   return <div className="sprite hero" style={ style }></div>

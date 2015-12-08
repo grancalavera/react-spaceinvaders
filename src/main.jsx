@@ -1,10 +1,11 @@
+import 'babel-polyfill'
 import React from 'react'
 import ReactDom from 'react-dom'
 import { createStore, combineReducers } from 'redux'
 import hero from './hero-reducer'
 import enemies from './enemies-reducer'
 import heroBullets from './hero-bullets-reducer'
-import dirty from './update-reducer'
+import world from './world-reducer'
 import createControls from './create-controls'
 import createGameLoop from './create-game-loop'
 import Stage from './stage.jsx'
@@ -13,7 +14,7 @@ const spaceInvaders = combineReducers({
   enemies
 , hero
 , heroBullets
-, dirty
+, world
 })
 
 const store = createStore(spaceInvaders)
@@ -46,7 +47,7 @@ createControls(action => {
 createGameLoop(store.dispatch)
 
 store.subscribe(() => {
-  if (store.getState().dirty) {
+  if (store.getState().world.oudated) {
     render()
     store.dispatch({type: 'DID_UPDATE'})
   }
@@ -67,3 +68,13 @@ render()
 // and then just pass them down to the view layer
 // https://github.com/matthew-andrews/isomorphic-fetch
 // http://redux.js.org/docs/advanced/ExampleRedditAPI.html
+// move all actions to a separate file
+// instead of dirty:
+// stale
+// expired
+// old
+// world changed
+// .. :(
+// remember ({foo, bar, ...props})
+// replace all usages of actions by action functions first
+// move geme loop into a middleware

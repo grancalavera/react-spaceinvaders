@@ -4,6 +4,10 @@ import {
 , cellWidth
 } from './config'
 
+import {
+  UPDATE_WORLD
+} from './actions'
+
 const width = cellWidth / 16
     , heigth = cellHeight / 4
     , top = worldHeight - cellHeight -heigth
@@ -28,7 +32,7 @@ const heroBullets = (state = [], action) => {
     case 'FIRE':
       if (state.length) return state
       return [ Object.assign(bullet(), {left: left(action)})]
-    case 'UPDATE':
+    case UPDATE_WORLD:
       if (!state.length) return state
       return update(state, action)
     default:

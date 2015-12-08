@@ -1,9 +1,11 @@
-const createGameLoop = (onUpdate = () => {}) => {
+import { updateWorld } from './actions'
+
+export const createGameLoop = (onUpdate = () => {}) => {
   let stop = false
 
   const loop = (lastTime) => {
     let currentTime = now()
-    onUpdate({type: 'UPDATE', elapsedTime: currentTime - lastTime})
+    onUpdate(updateWorld(currentTime - lastTime))
     if (stop) return
     requestAnimationFrame(() => loop(currentTime))
   }
@@ -16,4 +18,3 @@ const createGameLoop = (onUpdate = () => {}) => {
   return destroy
 }
 
-export default createGameLoop

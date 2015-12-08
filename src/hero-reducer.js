@@ -5,6 +5,10 @@ import {
 , worldHeight
 } from './config'
 
+import {
+  UPDATE_WORLD
+} from './actions'
+
 const minLeft = 0
     , maxLeft = worldWidth - cellWidth
     , speed = 7
@@ -33,7 +37,7 @@ const hero = (state = defaultState, action) => {
   switch (action.type) {
     case 'MOVE':
       return move(state, action)
-    case 'UPDATE':
+    case UPDATE_WORLD:
       return update(state, action)
     default:
       return state

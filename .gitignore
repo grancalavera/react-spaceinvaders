@@ -1,3 +1,4 @@
 space-invaders.css
 space-invaders.js
 node_modules
+*.sublime-workspace

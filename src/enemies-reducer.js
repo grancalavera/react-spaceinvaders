@@ -10,6 +10,10 @@ import {
 , rows
 } from './config'
 
+import {
+  UPDATE_WORLD
+} from './actions'
+
 const grid = createGrid(rows - 5, cols - 2)
 
 const defaultState = grid.cells.map(i => {
@@ -46,7 +50,7 @@ const enemies = (state = defaultState, action) => {
   switch (action.type) {
     case 'DESTROY':
       return R.reject((e => e.key == action.enemy.key), state)
-     case 'UPDATE':
+     case UPDATE_WORLD:
       return state.map(e => update(e, action))
     default:
       return state
