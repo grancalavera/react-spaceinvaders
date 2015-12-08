@@ -7,6 +7,7 @@ import {
 
 import {
   UPDATE_WORLD
+, MOVE_HERO
 } from './actions'
 
 const minLeft = 0
@@ -35,7 +36,7 @@ const update = (state, action) => {
 
 const hero = (state = defaultState, action) => {
   switch (action.type) {
-    case 'MOVE':
+    case MOVE_HERO:
       return move(state, action)
     case UPDATE_WORLD:
       return update(state, action)

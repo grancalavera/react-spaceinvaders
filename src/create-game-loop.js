@@ -1,4 +1,6 @@
-import { updateWorld } from './actions'
+import {
+  updateWorld
+} from './actions'
 
 export const createGameLoop = (onUpdate = () => {}) => {
   let stop = false

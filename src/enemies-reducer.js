@@ -12,6 +12,7 @@ import {
 
 import {
   UPDATE_WORLD
+, DESTROY_ENEMY
 } from './actions'
 
 const grid = createGrid(rows - 5, cols - 2)
@@ -48,7 +49,7 @@ const update = (state, action) => {
 
 const enemies = (state = defaultState, action) => {
   switch (action.type) {
-    case 'DESTROY':
+    case DESTROY_ENEMY:
       return R.reject((e => e.key == action.enemy.key), state)
      case UPDATE_WORLD:
       return state.map(e => update(e, action))

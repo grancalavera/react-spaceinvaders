@@ -1,14 +1,18 @@
-import 'babel-polyfill'
 import React from 'react'
 import ReactDom from 'react-dom'
 import { createStore, combineReducers } from 'redux'
 import hero from './hero-reducer'
 import enemies from './enemies-reducer'
 import heroBullets from './hero-bullets-reducer'
-import world from './world-reducer'
+import { world } from './world-reducer'
 import createControls from './create-controls'
-import createGameLoop from './create-game-loop'
+import { createGameLoop } from './create-game-loop'
 import Stage from './stage.jsx'
+import {
+  didUpdateWorld
+, destroyEnemy
+, FIRE_HERO
+} from './actions'
 
 const spaceInvaders = combineReducers({
   enemies
@@ -30,13 +34,13 @@ const checkCollisions = () => {
   enemyList().forEach( enemy => {
     let v = enemy.top < bullet.top && bullet.top < enemy.top + enemy.height
       , h = enemy.left < bullet.left && bullet.left < enemy.left + enemy.width
-    if (v && h) store.dispatch({ type: 'DESTROY', enemy: enemy })
+    if (v && h) store.dispatch(destroyEnemy(enemy))
   })
 }
 
 createControls(action => {
   switch (action.type) {
-    case 'FIRE':
+    case FIRE_HERO:
       store.dispatch(Object.assign({}, action, { left: heroLeft() }))
       break
     default:
@@ -47,9 +51,9 @@ createControls(action => {
 createGameLoop(store.dispatch)
 
 store.subscribe(() => {
-  if (store.getState().world.oudated) {
+  if (store.getState().world.outdated) {
     render()
-    store.dispatch({type: 'DID_UPDATE'})
+    store.dispatch(didUpdateWorld())
   }
   checkCollisions()
 })

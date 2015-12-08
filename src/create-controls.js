@@ -1,3 +1,8 @@
+import {
+  moveHero
+, fireHero
+} from './actions'
+
 const createControls = (onChange = () => {}) => {
 
   const LEFT  = 37
@@ -7,13 +12,13 @@ const createControls = (onChange = () => {}) => {
   const onKeydown = e => {
     switch (e.keyCode) {
       case LEFT:
-        onChange({type: 'MOVE', direction: -1})
+        onChange(moveHero(-1))
         break
       case RIGHT:
-        onChange({type: 'MOVE', direction: 1})
+        onChange(moveHero(1))
         break
       case SPACE:
-        onChange({type: 'FIRE'})
+        onChange(fireHero())
         break
     }
   }
@@ -22,7 +27,7 @@ const createControls = (onChange = () => {}) => {
     switch (e.keyCode) {
       case LEFT:
       case RIGHT:
-        onChange({type: 'MOVE', direction: 0})
+        onChange(moveHero(0))
         break
     }
   }

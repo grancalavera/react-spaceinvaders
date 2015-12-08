@@ -1,8 +1,9 @@
 import React from 'react'
 
 const Enemy = props => {
-  let style = { top: props.top, left: props.left }
-  return <div className={ className(props) } style={ style }></div>
+  let className = `sprite enemy ${ type(props.type) } ${ flip(props.flip) }`
+    , style = { top: props.top, left: props.left }
+  return <div className={ className } style={ style }></div>
 }
 
 Enemy.defaultProps = {
@@ -21,9 +22,5 @@ Enemy.propTypes = {
 
 const flip = value => (value ? 'flip' : '')
 const type = value => (['one', 'two', 'three'][value])
-const className = props => {
-  if (props.alive) return `sprite enemy ${ type(props.type) } ${ flip(props.flip) }`
-  return 'sprite explosion'
-}
 
 export default Enemy

@@ -6,6 +6,8 @@ import {
 
 import {
   UPDATE_WORLD
+, DESTROY_ENEMY
+, FIRE_HERO
 } from './actions'
 
 const width = cellWidth / 16
@@ -27,9 +29,9 @@ const update = (state, action) => {
 
 const heroBullets = (state = [], action) => {
   switch (action.type) {
-    case 'DESTROY':
+    case DESTROY_ENEMY:
        return []
-    case 'FIRE':
+    case FIRE_HERO:
       if (state.length) return state
       return [ Object.assign(bullet(), {left: left(action)})]
     case UPDATE_WORLD:
