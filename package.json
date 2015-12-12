@@ -5,7 +5,7 @@
   "main": "space-invaders.js",
   "scripts": {
     "less": "lessc src/main.less space-invaders.css",
-    "start": "npm run less && webpack-dev-server --progress --colors",
+    "start": "npm run less && webpack-dev-server --progress --colors --inline --hot",
     "test": "tap test/*.test.js"
   },
   "author": "leoncoto@gmail.com",
@@ -21,7 +21,6 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
-    "babel-polyfill": "^6.3.14",
     "isomorphic-fetch": "^2.2.0",
     "normalize.css": "^3.0.3",
     "ramda": "^0.18.0",

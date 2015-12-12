@@ -3,6 +3,7 @@ var path = require('path')
 
 module.exports = {
   entry: './src/main.jsx'
+, devtool: 'source-map'
 , output:
   {
     path: __dirname

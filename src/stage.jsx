@@ -2,12 +2,16 @@ import React from 'react'
 import Enemy from './enemy.jsx'
 import Hero from './hero.jsx'
 import Bullet from './bullet.jsx'
+import Explosion from './exposion.jsx'
 
 const Stage = props => {
+
+// this should just be a single sprite list
 
   let hero = props.world.hero
     , enemies = props.world.enemies
     , heroBullets = props.world.heroBullets
+    , enemyExplosions = props.world.enemyExplosions
 
   return <div className="cover">
 
@@ -28,6 +32,12 @@ const Stage = props => {
         key={ b.key }
         top={ b.top }
         left={ b.left }/>
+    )}
+
+    { enemyExplosions.map(e => <Explosion
+        key={ e.key }
+        top={ e.top }
+        left={ e.left } />
     )}
 
   </div>

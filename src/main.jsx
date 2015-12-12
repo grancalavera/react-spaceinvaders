@@ -2,7 +2,10 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import { createStore, combineReducers } from 'redux'
 import hero from './hero-reducer'
-import enemies from './enemies-reducer'
+import {
+  enemies
+, enemyExplosions
+} from './enemies-reducer'
 import heroBullets from './hero-bullets-reducer'
 import { world } from './world-reducer'
 import createControls from './create-controls'
@@ -16,6 +19,7 @@ import {
 
 const spaceInvaders = combineReducers({
   enemies
+, enemyExplosions
 , hero
 , heroBullets
 , world
@@ -31,10 +35,11 @@ const store = createStore(spaceInvaders)
 const checkCollisions = () => {
   let bullet = heroBullet()
   if (!bullet) return
+
   enemyList().forEach( enemy => {
     let v = enemy.top < bullet.top && bullet.top < enemy.top + enemy.height
       , h = enemy.left < bullet.left && bullet.left < enemy.left + enemy.width
-    if (v && h) store.dispatch(destroyEnemy(enemy))
+    if (v && h)  store.dispatch(destroyEnemy(enemy))
   })
 }
 
@@ -82,3 +87,16 @@ render()
 // remember ({foo, bar, ...props})
 // replace all usages of actions by action functions first
 // move geme loop into a middleware
+/*
+
+  x x x x x x x x x x x
+  x x x x x x x x x x x
+  x x x x x x x x x x x
+  x x x x x x x x x x x
+  x x x x x x x x x x x
+  x x x x x x x x x x x
+  x x x x x x x x x x x
+  x x x x x x x x x x x
+  x x x x x x x x x x x
+*/
+

@@ -30,7 +30,6 @@ const defaultState = grid.cells.map(i => {
   , beatPeriod: 500
   , fastestBeat: 50
   , beatFasterBy: 0 // this really should depend on how many enemies are still alive
-  , alive: true
   , width: cellWidth
   , height: cellHeight
   }
@@ -47,7 +46,7 @@ const update = (state, action) => {
   return  Object.assign({}, state, e)
 }
 
-const enemies = (state = defaultState, action) => {
+export const enemies = (state = defaultState, action) => {
   switch (action.type) {
     case DESTROY_ENEMY:
       return R.reject((e => e.key == action.enemy.key), state)
@@ -58,4 +57,18 @@ const enemies = (state = defaultState, action) => {
   }
 }
 
-export default enemies
+const addExplosion = (state, action) => {
+  let {top, left} = action.enemy
+    , key = `exposion-${Date.now()}`
+
+  return {top, left, key}
+}
+
+export const enemyExplosions = (state = [], action) => {
+  switch (action.type) {
+    case DESTROY_ENEMY:
+      return state.concat(addExplosion(state, action))
+    default:
+      return state
+  }
+}
