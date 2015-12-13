@@ -2,21 +2,22 @@
 @height: @width;
 @rows: 7;
 @cols: 11;
-@green: #00ff00;
 @bulletWidth: @width / 16;
 @bulletHeight: @height / 4;
+@green: #00ff00;
+@dark-gray:#1a1a1a;
 
 body, html {
-  background-color: black;
   color: white;
+  background-color: @dark-gray;
 }
 
 #stage {
   margin: 0 auto;
-  border: 1px solid white;
   width: @width * @cols;
   height: @height * @rows;
   position: relative;
+  background-color: black;
 }
 
 .cover {
