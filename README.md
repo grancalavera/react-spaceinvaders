@@ -38,3 +38,4 @@
 - http://tachyons.io
 - http://jxnblk.com/gravitons
 - https://github.com/chantastic/minions.css/tree/master
+- move id generation to action creators, see https://github.com/gaearon/redux-devtools#gotchas
