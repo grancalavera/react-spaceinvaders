@@ -3,7 +3,7 @@ import {
 , fireHero
 } from './actions'
 
-const createControls = (onChange = () => {}) => {
+export const createControls = (onChange = () => {}) => {
 
   const LEFT  = 37
       , RIGHT = 39
@@ -42,5 +42,3 @@ const createControls = (onChange = () => {}) => {
 
   return destroy
 }
-
-export default createControls

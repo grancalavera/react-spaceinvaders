@@ -27,7 +27,7 @@ const update = (state, action) => {
   return [ Object.assign({}, bullet, {top: bullet.top - speed}) ]
 }
 
-const heroBullets = (state = [], action) => {
+export const heroBullets = (state = [], action) => {
   switch (action.type) {
     case DESTROY_ENEMY:
        return []
@@ -41,5 +41,3 @@ const heroBullets = (state = [], action) => {
       return state
   }
 }
-
-export default heroBullets

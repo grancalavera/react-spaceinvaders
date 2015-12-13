@@ -34,7 +34,7 @@ const update = (state, action) => {
   return Object.assign({}, state, { left: left() })
 }
 
-const hero = (state = defaultState, action) => {
+export const hero = (state = defaultState, action) => {
   switch (action.type) {
     case MOVE_HERO:
       return move(state, action)
@@ -44,5 +44,3 @@ const hero = (state = defaultState, action) => {
       return state
   }
 }
-
-export default hero

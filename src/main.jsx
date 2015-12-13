@@ -1,21 +1,14 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import {createStore, combineReducers} from 'redux'
-import hero from './hero-reducer'
-import {
-  enemies
-, enemyExplosions
-} from './enemies-reducer'
-import heroBullets from './hero-bullets-reducer'
+import {hero} from './hero-reducer'
+import {enemies, enemyExplosions} from './enemies-reducer'
+import {heroBullets}from './hero-bullets-reducer'
 import {world} from './world-reducer'
-import createControls from './create-controls'
+import {didUpdateWorld, destroyEnemy, FIRE_HERO} from './actions'
+import {createControls} from './create-controls'
 import {createGameLoop} from './create-game-loop'
 import {Stage} from './stage.jsx'
-import {
-  didUpdateWorld
-, destroyEnemy
-, FIRE_HERO
-} from './actions'
 
 const spaceInvaders = combineReducers({
   enemies
