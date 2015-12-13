@@ -85,7 +85,7 @@ render()
 // .. :(
 // remember ({foo, bar, ...props})
 // replace all usages of actions by action functions first
-// move geme loop into a middleware
+// move game loop into a middleware
 /*
   x x x x x x x x x x x
   x x x x x x x x x x x
@@ -97,4 +97,13 @@ render()
   x x x x x x x x x x x
   x x x x x x x x x x x
 */
-
+// test ui using shallow rendering
+// https://facebook.github.io/react/docs/test-utils.html
+// css in js npm install radium
+// http://projects.formidablelabs.com/radium/
+// sufficiently local css is indistinguishable from inline styles
+// jed schmidt brooklynjs
+// https://www.youtube.com/watch?v=XjK03if9o7s
+// http://tachyons.io
+// http://jxnblk.com/gravitons
+// https://github.com/chantastic/minions.css/tree/master
