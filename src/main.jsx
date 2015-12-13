@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
-import {hero} from './hero-reducer'
+import {hero, getHero} from './hero-reducer'
 import {enemies, enemyExplosions} from './enemies-reducer'
 import {heroBullets}from './hero-bullets-reducer'
 import {world} from './world-reducer'
@@ -20,7 +20,7 @@ const spaceInvaders = combineReducers({
 })
 
 const store = createStore(spaceInvaders)
-    , heroLeft = () => store.getState().hero.left
+    , heroLeft = () => getHero(store.getState().hero).left
     , heroBullet = () => store.getState().heroBullets[0]
     , enemyList = () => store.getState().enemies
     , render = () => ReactDom.render(

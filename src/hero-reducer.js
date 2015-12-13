@@ -10,28 +10,31 @@ import {
 , MOVE_HERO
 } from './actions'
 
+export const getHero = state => state[0]
 const minLeft = 0
     , maxLeft = worldWidth - cellWidth
     , speed = 7
 
-const defaultState = {
+const defaultState = [{
   top: worldHeight - cellHeight
 , left: worldWidth / 2 - cellWidth / 2
 , speed: 0
-}
+, key: `hero-${Date.now()}`
+}]
 
 const move = (state, action) => {
-  return Object.assign({}, state, { speed: action.direction * speed })
+  return [Object.assign({}, getHero(state), { speed: action.direction * speed })]
 }
 
 const update = (state, action) => {
-  const left = () => {
-    let l = state.left + state.speed
+  let h = getHero(state)
+  let left = () => {
+    let l = h.left + h.speed
     if (l < minLeft) return minLeft
     if (l > maxLeft) return maxLeft
     return l
   }
-  return Object.assign({}, state, { left: left() })
+  return [Object.assign({}, h, { left: left() })]
 }
 
 export const hero = (state = defaultState, action) => {
