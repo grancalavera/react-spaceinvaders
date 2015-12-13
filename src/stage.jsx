@@ -5,39 +5,33 @@ import {Bullet} from './bullet.jsx'
 import {Explosion} from './exposion.jsx'
 
 export const Stage = props => {
-
-// this should just be a single sprite list
-
-  let hero = props.world.hero
-    , enemies = props.world.enemies
-    , heroBullets = props.world.heroBullets
-    , enemyExplosions = props.world.enemyExplosions
+  let {enemies, hero, heroBullets, enemyExplosions} = props
 
   return <div className="cover">
 
-    {enemies.map(e => <Enemy
-        type={e.type}
-        key={e.key}
-        top={e.top}
-        left={e.left}
-        flip={e.flip}
-        alive={e.alive} />
+    {enemies.map(s => <Enemy
+        type={s.type}
+        key={s.key}
+        top={s.top}
+        left={s.left}
+        flip={s.flip}
+        alive={s.alive} />
     )}
 
     <Hero
       top={hero.top}
       left={hero.left} />
 
-    {heroBullets.map(b => <Bullet
-        key={b.key}
-        top={b.top}
-        left={b.left} />
+    {heroBullets.map(s => <Bullet
+        key={s.key}
+        top={s.top}
+        left={s.left} />
     )}
 
-    {enemyExplosions.map(e => <Explosion
-        key={e.key}
-        top={e.top}
-        left={e.left} />
+    {enemyExplosions.map(s => <Explosion
+        key={s.key}
+        top={s.top}
+        left={s.left} />
     )}
 
   </div>

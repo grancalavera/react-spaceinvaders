@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import {createStore, combineReducers} from 'redux'
+import {Provider} from 'react-redux'
 import {hero} from './hero-reducer'
 import {enemies, enemyExplosions} from './enemies-reducer'
 import {heroBullets}from './hero-bullets-reducer'
@@ -8,7 +9,7 @@ import {world} from './world-reducer'
 import {didUpdateWorld, destroyEnemy, FIRE_HERO} from './actions'
 import {createControls} from './create-controls'
 import {createGameLoop} from './create-game-loop'
-import {Stage} from './stage.jsx'
+import SpaceInvaders from './space-invaders'
 
 const spaceInvaders = combineReducers({
   enemies
@@ -22,7 +23,12 @@ const store = createStore(spaceInvaders)
     , heroLeft = () => store.getState().hero.left
     , heroBullet = () => store.getState().heroBullets[0]
     , enemyList = () => store.getState().enemies
-    , render = () => ReactDom.render(<Stage world={store.getState()} />, document.getElementById('stage'))
+    , render = () => ReactDom.render(
+        <Provider store={store}>
+          <SpaceInvaders />
+        </Provider>
+      , document.getElementById('stage')
+      )
 
 const checkCollisions = () => {
   let bullet = heroBullet()
