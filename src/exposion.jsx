@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Explosion = props => {
-  let style = { top: props.top, left: props.left }
-  return <div className="sprite explosion" style={ style }></div>
+export const Explosion = props => {
+  let {top, left} = props
+  return <div className="sprite explosion" style={{top, left}}></div>
 }
 
 Explosion.defaultProps = {
@@ -14,5 +14,3 @@ Explosion.propTypes = {
   top: React.PropTypes.number
 , left: React.PropTypes.number
 }
-
-export default Explosion

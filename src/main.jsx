@@ -1,16 +1,16 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import { createStore, combineReducers } from 'redux'
+import {createStore, combineReducers} from 'redux'
 import hero from './hero-reducer'
 import {
   enemies
 , enemyExplosions
 } from './enemies-reducer'
 import heroBullets from './hero-bullets-reducer'
-import { world } from './world-reducer'
+import {world} from './world-reducer'
 import createControls from './create-controls'
-import { createGameLoop } from './create-game-loop'
-import Stage from './stage.jsx'
+import {createGameLoop} from './create-game-loop'
+import {Stage} from './stage.jsx'
 import {
   didUpdateWorld
 , destroyEnemy
@@ -26,11 +26,10 @@ const spaceInvaders = combineReducers({
 })
 
 const store = createStore(spaceInvaders)
-
-    , render = () => ReactDom.render(<Stage world={ store.getState() } />, document.getElementById('stage'))
     , heroLeft = () => store.getState().hero.left
     , heroBullet = () => store.getState().heroBullets[0]
     , enemyList = () => store.getState().enemies
+    , render = () => ReactDom.render(<Stage world={store.getState()} />, document.getElementById('stage'))
 
 const checkCollisions = () => {
   let bullet = heroBullet()
@@ -46,7 +45,7 @@ const checkCollisions = () => {
 createControls(action => {
   switch (action.type) {
     case FIRE_HERO:
-      store.dispatch(Object.assign({}, action, { left: heroLeft() }))
+      store.dispatch(Object.assign({}, action, {left: heroLeft()}))
       break
     default:
       store.dispatch(action)
@@ -59,7 +58,7 @@ store.subscribe(() => {
   if (store.getState().world.outdated) {
     render()
     store.dispatch(didUpdateWorld())
-  }
+ }
   checkCollisions()
 })
 
@@ -88,7 +87,6 @@ render()
 // replace all usages of actions by action functions first
 // move geme loop into a middleware
 /*
-
   x x x x x x x x x x x
   x x x x x x x x x x x
   x x x x x x x x x x x

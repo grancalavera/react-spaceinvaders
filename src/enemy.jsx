@@ -1,9 +1,9 @@
 import React from 'react'
+import classNames from 'classnames'
 
-const Enemy = props => {
-  let className = `sprite enemy ${ type(props.type) } ${ flip(props.flip) }`
-    , style = { top: props.top, left: props.left }
-  return <div className={ className } style={ style }></div>
+export const Enemy = props => {
+  let {top, left} = props
+  return <div className={className(props)} style={{top, left}}></div>
 }
 
 Enemy.defaultProps = {
@@ -21,6 +21,8 @@ Enemy.propTypes = {
 }
 
 const flip = value => (value ? 'flip' : '')
-const type = value => (['one', 'two', 'three'][value])
-
-export default Enemy
+const enemyType = value => (['one', 'two', 'three'][value])
+const className = props => {
+  let {type, flip} =  props
+  return classNames('sprite', 'enemy', enemyType(type), {flip})
+}

@@ -15,6 +15,8 @@ import {
 , DESTROY_ENEMY
 } from './actions'
 
+//------------------------------------------------------------------------------
+
 const grid = createGrid(rows - 5, cols - 2)
 
 const defaultState = grid.cells.map(i => {
@@ -38,12 +40,11 @@ const defaultState = grid.cells.map(i => {
 const update = (state, action) => {
   let beat = state.elapsedTime >= state.beatPeriod
     , beatFaster = state.beatPeriod > state.fastestBeat
-    , e = {
-        elapsedTime: beat ? 0 : state.elapsedTime + action.elapsedTime
-      , flip: beat ? !state.flip : state.flip
-      , beatPeriod: beatFaster ? state.beatPeriod - state.beatFasterBy : state.beatPeriod
-      }
-  return  Object.assign({}, state, e)
+    , elapsedTime = beat ? 0 : state.elapsedTime + action.elapsedTime
+    , flip = beat ? !state.flip : state.flip
+    , beatPeriod = beatFaster ? state.beatPeriod - state.beatFasterBy : state.beatPeriod
+
+  return  Object.assign({}, state, {elapsedTime, flip, beatPeriod})
 }
 
 export const enemies = (state = defaultState, action) => {
@@ -57,14 +58,15 @@ export const enemies = (state = defaultState, action) => {
   }
 }
 
+//------------------------------------------------------------------------------
+
+const maxAge = 200
+
 const addExplosion = (state, action) => {
   let {top, left} = action.enemy
     , key = `exposion-${Date.now()}`
-
   return {top, left, key, age: 0}
 }
-
-let maxAge = 200
 
 const updateEplosions = (state, action) => {
   return state.reduce((acc, explosion) => {

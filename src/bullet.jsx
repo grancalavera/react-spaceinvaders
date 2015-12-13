@@ -1,14 +1,11 @@
 import React from 'react'
 
-
-const Bullet = props => {
-  let style = { top: props.top, left: props.left }
-  return <div className="sprite bullet" style={ style }></div>
+export const Bullet = props => {
+  let {top, left} = props
+  return <div className="sprite bullet" style={{top, left}}></div>
 }
 
 Bullet.defaultProps = {
   top: 0
 , left: 0
 }
-
-export default Bullet
