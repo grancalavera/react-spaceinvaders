@@ -61,13 +61,25 @@ const addExplosion = (state, action) => {
   let {top, left} = action.enemy
     , key = `exposion-${Date.now()}`
 
-  return {top, left, key}
+  return {top, left, key, age: 0}
+}
+
+let maxAge = 200
+
+const updateEplosions = (state, action) => {
+  return state.reduce((acc, explosion) => {
+    if (explosion.age >= maxAge) return acc
+    let age = explosion.age + action.elapsedTime
+    return acc.concat(Object.assign({}, explosion, {age}))
+  }, [])
 }
 
 export const enemyExplosions = (state = [], action) => {
   switch (action.type) {
     case DESTROY_ENEMY:
       return state.concat(addExplosion(state, action))
+    case UPDATE_WORLD:
+      return updateEplosions(state, action)
     default:
       return state
   }
