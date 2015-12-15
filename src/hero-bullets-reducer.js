@@ -5,7 +5,7 @@ import {
 } from './config'
 
 import {
-  UPDATE_WORLD
+  UPDATE
 , DESTROY_ENEMY
 , FIRE_HERO
 } from './actions'
@@ -20,11 +20,9 @@ const width = cellWidth / 16
     , bullet = () => ({ key: key(), top: top, width: width, heigth: heigth })
 
 const update = (state, action) => {
-  // this is just bind
-  // (>>=) :: m a -> (a -> m b) -> m b
   let bullet = state[0]
   if (bullet.top < maxTop) return []
-  return [ Object.assign({}, bullet, {top: bullet.top - speed}) ]
+  return [Object.assign({}, bullet, {top: bullet.top - speed})]
 }
 
 export const heroBullets = (state = [], action) => {
@@ -33,8 +31,8 @@ export const heroBullets = (state = [], action) => {
        return []
     case FIRE_HERO:
       if (state.length) return state
-      return [ Object.assign(bullet(), {left: left(action)})]
-    case UPDATE_WORLD:
+      return [Object.assign(bullet(), {left: left(action)})]
+    case UPDATE:
       if (!state.length) return state
       return update(state, action)
     default:

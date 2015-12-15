@@ -11,7 +11,7 @@ import {
 } from './config'
 
 import {
-  UPDATE_WORLD
+  UPDATE
 , DESTROY_ENEMY
 } from './actions'
 
@@ -51,7 +51,7 @@ export const enemies = (state = defaultState, action) => {
   switch (action.type) {
     case DESTROY_ENEMY:
       return R.reject((e => e.key == action.enemy.key), state)
-     case UPDATE_WORLD:
+     case UPDATE:
       return state.map(e => update(e, action))
     default:
       return state
@@ -80,7 +80,7 @@ export const enemyExplosions = (state = [], action) => {
   switch (action.type) {
     case DESTROY_ENEMY:
       return state.concat(addExplosion(state, action))
-    case UPDATE_WORLD:
+    case UPDATE:
       return updateEplosions(state, action)
     default:
       return state

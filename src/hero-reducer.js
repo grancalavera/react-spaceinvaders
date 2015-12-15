@@ -6,7 +6,7 @@ import {
 } from './config'
 
 import {
-  UPDATE_WORLD
+  UPDATE
 , MOVE_HERO
 } from './actions'
 
@@ -41,7 +41,7 @@ export const hero = (state = defaultState, action) => {
   switch (action.type) {
     case MOVE_HERO:
       return move(state, action)
-    case UPDATE_WORLD:
+    case UPDATE:
       return update(state, action)
     default:
       return state
