@@ -15,9 +15,10 @@ import {
 , DESTROY_ENEMY
 } from './actions'
 
-const grid = createGrid(5, cols - 4)
-const hStepSize = cellWidth / 4
+const grid = createGrid(3, cols - 4)
+const hStepSize = cellWidth / 8
 const vStepSize = cellHeight
+const period = 10
 
 const defaultState = grid.cells.map(i => {
 
@@ -30,12 +31,10 @@ const defaultState = grid.cells.map(i => {
   , flip: false
   , age: 0
   , index: i
-
-  , period: 500
+  , didMove: true
 
   , hDirection: 1
-  , vDirection: 0
-  , nextMoveTime: i * 100
+  , nextMoveTime: i * period
 
   // this really should depend on how many enemies are still alive
   // and beatPeriod and beatFasterBy are two aspects of the same property
@@ -50,56 +49,52 @@ const defaultState = grid.cells.map(i => {
   }
 })
 
-const farLeft   = enemy => enemy.left <= hStepSize
-const farRight  = enemy => enemy.left >= worldWidth - hStepSize
+const atLeftEdge = enemy => enemy.left <= cellWidth / 2
+const atRightEdge = enemy => enemy.left >= worldWidth - cellWidth - cellWidth / 2
 
-const update = (state, action) => {
-
-  let {leftmost, rightmost} = state.reduce(({leftmost, rightmost}, enemy) => {
+function edges(enemies) {
+  return R.reduce(({leftmost, rightmost}, enemy) => {
     return {
       leftmost: !leftmost ? enemy : enemy.col < leftmost.col ? enemy : leftmost
     , rightmost: !rightmost ? enemy : enemy.col > rightmost.col ? enemy : rightmost
     }
-  }, {})
+  }, {}, enemies)
+}
 
-  let farEdge = farLeft(leftmost) || farRight(rightmost)
-    , vDirection = farEdge ? 1 : 0
-    , hDirection = farEdge ? leftmost.hDirection * -1 : leftmost.hDirection
+const update = (enemies, action) => {
+  let allDidMove = R.all(R.pluck('didMove'), enemies)
+    , {leftmost, rightmost} = edges(enemies)
+    , atEdge = atLeftEdge(leftmost) || atRightEdge(rightmost)
+    , advance = allDidMove && atEdge
+    , vDirection = advance ? 1 : 0
+    , hDirection = advance ? leftmost.hDirection * -1 : leftmost.hDirection
 
-  // the beat period should be calculated here
-  // where we can count all the enemies
+// if (didMove && rightmost.left == 480) {
+//   let ww = worldWidth
+//     , cw = cellWidth
+//     , ss = hStepSize
+//     , l = rightmost.left
+//   debugger
+// }
 
-  return state.map(enemy => {
-    let age             = enemy.age + action.elapsedTime
+  return enemies.map(enemy => {
+    let age = enemy.age + action.elapsedTime
+      , move = age >= enemy.nextMoveTime
+      , nextMoveTime = move ? age + (grid.length * period) : enemy.nextMoveTime
+      , top = move ? enemy.top + vStepSize * vDirection : enemy.top
+      , left = move ? enemy.left + hStepSize * hDirection : enemy.left
+      , flip = move ? !enemy.flip : enemy.flip
+      , selected = enemy.key == leftmost.key || enemy.key == rightmost.key
 
-      , animate         = age >= enemy.nextAnimateTime
-      , nextAnimateTime = animate ? age + enemy.period : enemy.nextAnimateTime
-
-
-      , move            = age >= enemy.nextMoveTime
-      , nextMoveTime    = move ? age + enemy.period * 5: enemy.nextMoveTime
-
-      , top             = move ? enemy.top + vStepSize * vDirection : enemy.top
-      , left            = move ? enemy.left + hStepSize * hDirection : enemy.left
-      , selected        = (enemy.key == leftmost.key) || (enemy.key == rightmost.key)
-      , flip            = animate ? !enemy.flip : enemy.flip
-
-    return  Object.assign(
-      {}
-    , enemy
-    , {
-        age
-      , left
-      , top
-      , flip
-      , selected
-
-      , nextAnimateTime
-      , nextMoveTime
-      , vDirection
-      , hDirection
-      }
-    )
+    return Object.assign({}, enemy, {
+      age
+    , top
+    , left
+    , flip
+    , selected
+    , vDirection
+    , nextMoveTime
+    })
   })
 }
 
@@ -114,8 +109,6 @@ export const enemies = (state = defaultState, action) => {
   }
 }
 
-const maxAge = 200
-
 const addExplosion = (state, action) => {
   let {top, left} = action.enemy
     , key = `exposion-${Date.now()}`
@@ -124,7 +117,7 @@ const addExplosion = (state, action) => {
 
 const updateEplosions = (state, action) => {
   return state.reduce((acc, explosion) => {
-    if (explosion.age >= maxAge) return acc
+    if (explosion.age >= 200) return acc
     let age = explosion.age + action.elapsedTime
     return acc.concat(Object.assign({}, explosion, {age}))
   }, [])

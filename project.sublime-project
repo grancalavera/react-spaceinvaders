@@ -2,14 +2,19 @@
 	"folders":
 	[
 		{
-			"path": ".",
-      "folder_exclude_patterns": [
-        "node_modules"
-      ],
-      "file_exclude_patterns": [
-        "*.psd",
-        "*.ai"
-      ]
+			"file_exclude_patterns":
+			[
+				"*.psd",
+				"*.ai"
+			],
+			"folder_exclude_patterns":
+			[
+				"node_modules"
+			],
+			"path": "."
+		},
+		{
+			"path": "/Users/grancalavera/sandbox/the-grid"
 		}
 	]
 }
