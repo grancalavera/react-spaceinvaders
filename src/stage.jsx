@@ -1,39 +1,43 @@
 import React from 'react'
-import {Enemy} from './enemy.jsx'
-import {Hero} from './hero.jsx'
-import {Bullet} from './bullet.jsx'
-import {Explosion} from './exposion.jsx'
+import { Enemy } from './enemy.jsx'
+import { Hero } from './hero.jsx'
+import { Bullet } from './bullet.jsx'
+import { Explosion } from './exposion.jsx'
 
 export const Stage = props => {
-  let {enemies, hero, heroBullets, enemyExplosions} = props
+  let {enemies, hero, heroBullets, enemyExplosions} = props.state
 
   return <div className="cover">
 
-    {enemies.map(s => <Enemy
-      type={s.type}
-      key={s.key}
-      top={s.top}
-      left={s.left}
-      flip={s.flip}
-      alive={s.alive} />
+    {enemies.map(d => <Enemy
+      type={ d.type }
+      key={ d.key }
+      top={ d.top }
+      left={ d.left }
+      flip={ d.flip }
+      selected={ d.selected }
+      />
     )}
 
-    {hero.map(s => <Hero
-      key={s.key}
-      top={s.top}
-      left={s.left} />
+    {hero.map(d => <Hero
+      key={ d.key }
+      top={ d.top }
+      left={ d.left }
+      />
     )}
 
-    {heroBullets.map(s => <Bullet
-      key={s.key}
-      top={s.top}
-      left={s.left} />
+    {heroBullets.map(d => <Bullet
+      key={ d.key }
+      top={ d.top }
+      left={ d.left }
+      />
     )}
 
-    {enemyExplosions.map(s => <Explosion
-      key={s.key}
-      top={s.top}
-      left={s.left} />
+    {enemyExplosions.map(d => <Explosion
+      key={ d.key }
+      top={ d.top }
+      left={ d.left }
+      />
     )}
 
   </div>

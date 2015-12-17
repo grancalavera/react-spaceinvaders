@@ -23,6 +23,6 @@ Enemy.propTypes = {
 const flip = value => (value ? 'flip' : '')
 const enemyType = value => (['one', 'two', 'three'][value])
 const className = props => {
-  let {type, flip} =  props
-  return classNames('sprite', 'enemy', enemyType(type), {flip})
+  let {type, flip, selected} =  props
+  return classNames('sprite', 'enemy', enemyType(type), {flip, selected})
 }

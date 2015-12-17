@@ -1,5 +1,5 @@
 import R from 'ramda'
-import createGrid from './create-grid'
+import { createGrid } from './create-grid'
 
 import {
   cellWidth
@@ -15,36 +15,92 @@ import {
 , DESTROY_ENEMY
 } from './actions'
 
-//------------------------------------------------------------------------------
-
-const grid = createGrid(rows - 5, cols - 2)
+const grid = createGrid(5, cols - 4)
+const hStepSize = cellWidth / 4
+const vStepSize = cellHeight
 
 const defaultState = grid.cells.map(i => {
-  let coords = grid.getCoords(i)
+
+  let {x, y} = grid.getCoords(i)
+
   return {
+
     key: `enemy-${ i }`
-  , type: coords.y % 3
-  , left: coords.x * cellWidth + cellWidth
-  , top: coords.y * cellHeight + cellHeight
+  , type: y % 3
   , flip: false
-  , elapsedTime: 0
+  , age: 0
   , index: i
-  , beatPeriod: 500
-  , fastestBeat: 50
-  , beatFasterBy: 0 // this really should depend on how many enemies are still alive
+
+  , period: 500
+
+  , hDirection: 1
+  , vDirection: 0
+  , nextMoveTime: i * 100
+
+  // this really should depend on how many enemies are still alive
+  // and beatPeriod and beatFasterBy are two aspects of the same property
+  , nextAnimateTime: 0
+
   , width: cellWidth
   , height: cellHeight
+  , row: y
+  , col: x
+  , left: x * cellWidth + cellWidth * 2
+  , top: grid.rows * cellHeight - y * cellHeight
   }
 })
 
-const update = (state, action) => {
-  let beat = state.elapsedTime >= state.beatPeriod
-    , beatFaster = state.beatPeriod > state.fastestBeat
-    , elapsedTime = beat ? 0 : state.elapsedTime + action.elapsedTime
-    , flip = beat ? !state.flip : state.flip
-    , beatPeriod = beatFaster ? state.beatPeriod - state.beatFasterBy : state.beatPeriod
+const farLeft   = enemy => enemy.left <= hStepSize
+const farRight  = enemy => enemy.left >= worldWidth - hStepSize
 
-  return  Object.assign({}, state, {elapsedTime, flip, beatPeriod})
+const update = (state, action) => {
+
+  let {leftmost, rightmost} = state.reduce(({leftmost, rightmost}, enemy) => {
+    return {
+      leftmost: !leftmost ? enemy : enemy.col < leftmost.col ? enemy : leftmost
+    , rightmost: !rightmost ? enemy : enemy.col > rightmost.col ? enemy : rightmost
+    }
+  }, {})
+
+  let farEdge = farLeft(leftmost) || farRight(rightmost)
+    , vDirection = farEdge ? 1 : 0
+    , hDirection = farEdge ? leftmost.hDirection * -1 : leftmost.hDirection
+
+  // the beat period should be calculated here
+  // where we can count all the enemies
+
+  return state.map(enemy => {
+    let age             = enemy.age + action.elapsedTime
+
+      , animate         = age >= enemy.nextAnimateTime
+      , nextAnimateTime = animate ? age + enemy.period : enemy.nextAnimateTime
+
+
+      , move            = age >= enemy.nextMoveTime
+      , nextMoveTime    = move ? age + enemy.period * 5: enemy.nextMoveTime
+
+      , top             = move ? enemy.top + vStepSize * vDirection : enemy.top
+      , left            = move ? enemy.left + hStepSize * hDirection : enemy.left
+      , selected        = (enemy.key == leftmost.key) || (enemy.key == rightmost.key)
+      , flip            = animate ? !enemy.flip : enemy.flip
+
+    return  Object.assign(
+      {}
+    , enemy
+    , {
+        age
+      , left
+      , top
+      , flip
+      , selected
+
+      , nextAnimateTime
+      , nextMoveTime
+      , vDirection
+      , hDirection
+      }
+    )
+  })
 }
 
 export const enemies = (state = defaultState, action) => {
@@ -52,13 +108,11 @@ export const enemies = (state = defaultState, action) => {
     case DESTROY_ENEMY:
       return R.reject((e => e.key == action.enemy.key), state)
      case UPDATE:
-      return state.map(e => update(e, action))
+      return update(state, action)
     default:
       return state
   }
 }
-
-//------------------------------------------------------------------------------
 
 const maxAge = 200
 

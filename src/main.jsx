@@ -8,8 +8,8 @@ import {heroBullets}from './hero-bullets-reducer'
 import {controls} from './controls'
 import {gameLoop} from './game-loop'
 import {collisions} from './collisions'
-import SpaceInvaders from './space-invaders'
 import {update} from './actions'
+import {Stage} from './stage.jsx'
 
 const spaceInvaders = combineReducers({
   enemies
@@ -21,9 +21,7 @@ const spaceInvaders = combineReducers({
 const store = createStore(spaceInvaders)
 
 const render = () => ReactDom.render(
-  <Provider store={store}>
-    <SpaceInvaders />
-  </Provider>
+  <Stage state={store.getState()} />
 , document.getElementById('stage')
 )
 
