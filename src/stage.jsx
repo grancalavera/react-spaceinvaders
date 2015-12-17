@@ -16,6 +16,7 @@ export const Stage = props => {
       left={ d.left }
       flip={ d.flip }
       selected={ d.selected }
+      didMove={ d.didMove }
       />
     )}
 

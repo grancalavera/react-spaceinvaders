@@ -15,10 +15,10 @@ import {
 , DESTROY_ENEMY
 } from './actions'
 
-const grid = createGrid(3, cols - 4)
-const hStepSize = cellWidth / 8
+const grid = createGrid(3, cols - 2)
+const hStepSize = cellWidth / 4
 const vStepSize = cellHeight
-const period = 10
+const period = 50
 
 const defaultState = grid.cells.map(i => {
 
@@ -44,7 +44,7 @@ const defaultState = grid.cells.map(i => {
   , height: cellHeight
   , row: y
   , col: x
-  , left: x * cellWidth + cellWidth * 2
+  , left: x * cellWidth + cellWidth
   , top: grid.rows * cellHeight - y * cellHeight
   }
 })
@@ -62,20 +62,14 @@ function edges(enemies) {
 }
 
 const update = (enemies, action) => {
-  let allDidMove = R.all(R.pluck('didMove'), enemies)
+  let allDidMove = R.all(enemy => enemy.didMove, enemies)
     , {leftmost, rightmost} = edges(enemies)
     , atEdge = atLeftEdge(leftmost) || atRightEdge(rightmost)
     , advance = allDidMove && atEdge
     , vDirection = advance ? 1 : 0
     , hDirection = advance ? leftmost.hDirection * -1 : leftmost.hDirection
 
-// if (didMove && rightmost.left == 480) {
-//   let ww = worldWidth
-//     , cw = cellWidth
-//     , ss = hStepSize
-//     , l = rightmost.left
-//   debugger
-// }
+  if (allDidMove && atEdge) return enemies
 
   return enemies.map(enemy => {
     let age = enemy.age + action.elapsedTime
@@ -85,6 +79,7 @@ const update = (enemies, action) => {
       , left = move ? enemy.left + hStepSize * hDirection : enemy.left
       , flip = move ? !enemy.flip : enemy.flip
       , selected = enemy.key == leftmost.key || enemy.key == rightmost.key
+      , didMove = move || (allDidMove ? false : enemy.didMove)
 
     return Object.assign({}, enemy, {
       age
@@ -94,6 +89,7 @@ const update = (enemies, action) => {
     , selected
     , vDirection
     , nextMoveTime
+    , didMove
     })
   })
 }
