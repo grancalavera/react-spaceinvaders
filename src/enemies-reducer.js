@@ -16,9 +16,9 @@ import {
 } from './actions'
 
 const grid = createGrid(3, cols - 2)
-const hStepSize = cellWidth / 4
-const vStepSize = cellHeight
-const period = 50
+const hStepSize = cellWidth / 8
+const vStepSize = cellHeight / 2
+const period = 100
 
 const defaultState = grid.cells.map(i => {
 
@@ -35,6 +35,7 @@ const defaultState = grid.cells.map(i => {
 
   , hDirection: 1
   , nextMoveTime: i * period
+  , nextAdvanceTime: 0
 
   // this really should depend on how many enemies are still alive
   // and beatPeriod and beatFasterBy are two aspects of the same property
@@ -52,7 +53,7 @@ const defaultState = grid.cells.map(i => {
 const atLeftEdge = enemy => enemy.left <= cellWidth / 2
 const atRightEdge = enemy => enemy.left >= worldWidth - cellWidth - cellWidth / 2
 
-function edges(enemies) {
+const edges = enemies => {
   return R.reduce(({leftmost, rightmost}, enemy) => {
     return {
       leftmost: !leftmost ? enemy : enemy.col < leftmost.col ? enemy : leftmost
@@ -62,34 +63,44 @@ function edges(enemies) {
 }
 
 const update = (enemies, action) => {
-  let allDidMove = R.all(enemy => enemy.didMove, enemies)
+  let { elapsedTime } = action
+    , allDidMove = R.all(enemy => enemy.didMove, enemies)
     , {leftmost, rightmost} = edges(enemies)
     , atEdge = atLeftEdge(leftmost) || atRightEdge(rightmost)
     , advance = allDidMove && atEdge
-    , vDirection = advance ? 1 : 0
-    , hDirection = advance ? leftmost.hDirection * -1 : leftmost.hDirection
 
-  if (allDidMove && atEdge) return enemies
+  if (advance) return defaultState
+
+  // if (advance) return enemies.map(enemy => {
+  //   let age = enemy.age + elapsedTime
+  //     , advance_ = age >= enemy.nextAdvanceTime
+  //     , nextAdvanceTime = advance ? Number.MAX_SAFE_INTEGER : enemy.nextAdvanceTime
+
+  //   return Object.assign({}, enemy, {
+  //     age
+  //   , didMove: true
+  //   })
+  // })
 
   return enemies.map(enemy => {
-    let age = enemy.age + action.elapsedTime
+    let age = enemy.age + elapsedTime
       , move = age >= enemy.nextMoveTime
       , nextMoveTime = move ? age + (grid.length * period) : enemy.nextMoveTime
-      , top = move ? enemy.top + vStepSize * vDirection : enemy.top
-      , left = move ? enemy.left + hStepSize * hDirection : enemy.left
+      , nextAdvanceTime = age + enemy.row * period
+      , left = move ? enemy.left + hStepSize * enemy.hDirection : enemy.left
       , flip = move ? !enemy.flip : enemy.flip
       , selected = enemy.key == leftmost.key || enemy.key == rightmost.key
       , didMove = move || (allDidMove ? false : enemy.didMove)
 
     return Object.assign({}, enemy, {
       age
-    , top
     , left
     , flip
     , selected
-    , vDirection
     , nextMoveTime
+    , nextAdvanceTime
     , didMove
+    , didAdvance: false
     })
   })
 }
