@@ -18,9 +18,9 @@ import {
 } from './actions'
 
 const grid = createGrid(enemyRows, enemyCols)
-const hStepSize = cellWidth / 4
+const hStepSize = cellWidth / 6
 const vStepSize = cellHeight / 2
-const period = 10000
+const period = 80
 
 const defaultState = grid.cells.map(i => {
 
@@ -47,7 +47,7 @@ const defaultState = grid.cells.map(i => {
   , row: y
   , col: x
   , left: x * cellWidth + ((worldWidth - grid.cols * cellWidth) / 2)
-  , top: grid.rows * cellHeight - y * cellHeight
+  , top: y * cellHeight + (cellHeight * 3)
   }
 })
 
@@ -61,6 +61,14 @@ const edges = enemies => {
     , rightmost: !rightmost ? enemy : enemy.col > rightmost.col ? enemy : rightmost
     }
   }, {}, enemies)
+}
+
+const updateStrafe = (state, action) => {
+
+}
+
+const updateAdvance = (state, action) => {
+
 }
 
 const update = (enemies, action) => {
@@ -111,34 +119,9 @@ export const enemies = (state = defaultState, action) => {
     case DESTROY_ENEMY:
       return R.reject((e => e.key == action.enemy.key), state)
      case UPDATE:
-      return state.length ? state : defaultState
-      // return update(state, action)
+      return update(state, action)
     default:
       return state
   }
 }
 
-const addExplosion = (state, action) => {
-  let {top, left} = action.enemy
-    , key = `exposion-${Date.now()}`
-  return {top, left, key, age: 0}
-}
-
-const updateEplosions = (state, action) => {
-  return state.reduce((acc, explosion) => {
-    if (explosion.age >= 200) return acc
-    let age = explosion.age + action.elapsedTime
-    return acc.concat(Object.assign({}, explosion, {age}))
-  }, [])
-}
-
-export const enemyExplosions = (state = [], action) => {
-  switch (action.type) {
-    case DESTROY_ENEMY:
-      return state.concat(addExplosion(state, action))
-    case UPDATE:
-      return updateEplosions(state, action)
-    default:
-      return state
-  }
-}
