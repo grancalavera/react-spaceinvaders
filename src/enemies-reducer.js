@@ -8,6 +8,8 @@ import {
 , worldHeight
 , cols
 , rows
+, enemyRows
+, enemyCols
 } from './config'
 
 import {
@@ -15,10 +17,10 @@ import {
 , DESTROY_ENEMY
 } from './actions'
 
-const grid = createGrid(3, cols - 2)
-const hStepSize = cellWidth / 8
+const grid = createGrid(enemyRows, enemyCols)
+const hStepSize = cellWidth / 4
 const vStepSize = cellHeight / 2
-const period = 100
+const period = 10000
 
 const defaultState = grid.cells.map(i => {
 
@@ -30,7 +32,6 @@ const defaultState = grid.cells.map(i => {
   , type: y % 3
   , flip: false
   , age: 0
-  , index: i
   , didMove: true
 
   , hDirection: 1
@@ -45,7 +46,7 @@ const defaultState = grid.cells.map(i => {
   , height: cellHeight
   , row: y
   , col: x
-  , left: x * cellWidth + cellWidth
+  , left: x * cellWidth + ((worldWidth - grid.cols * cellWidth) / 2)
   , top: grid.rows * cellHeight - y * cellHeight
   }
 })
@@ -110,7 +111,8 @@ export const enemies = (state = defaultState, action) => {
     case DESTROY_ENEMY:
       return R.reject((e => e.key == action.enemy.key), state)
      case UPDATE:
-      return update(state, action)
+      return state.length ? state : defaultState
+      // return update(state, action)
     default:
       return state
   }
