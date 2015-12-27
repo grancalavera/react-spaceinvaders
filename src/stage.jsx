@@ -6,15 +6,15 @@ import { Explosion } from './exposion.jsx'
 import { worldWidth, worldHeight } from './config'
 
 export const Stage = props => {
-  let {enemies, hero, heroBullets, enemyExplosions} = props.state
+  let {enemiesGrid, hero, heroBullets, enemyExplosions} = props.state
 
-  return <div className="stage" style={{width: worldWidth, height :worldHeight}}>
+  return <div className="stage" style={{width: worldWidth, height: worldHeight}}>
 
-    {enemies.map(d => <Enemy
-      type={ d.type }
+    {enemiesGrid.map(d => <Enemy
       key={ d.key }
       top={ d.top }
       left={ d.left }
+      type={ d.type }
       flip={ d.flip }
       selected={ d.selected }
       didMove={ d.didMove }

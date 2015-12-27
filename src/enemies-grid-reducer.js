@@ -23,7 +23,7 @@ const grid = createGrid(enemyRows, enemyCols)
     , period = 80
     , defaultState = defaultEnemyGrid()
 
-export function enemies(state = defaultState, action) {
+export function enemiesGrid(state = defaultState, action) {
   switch (action.type) {
     case DESTROY_ENEMY:
       return R.reject((e => e.key == action.enemy.key), state)

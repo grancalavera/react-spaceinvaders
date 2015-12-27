@@ -3,7 +3,7 @@ import ReactDom from 'react-dom'
 import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 import {hero} from './hero-reducer'
-import {enemies} from './enemies-reducer'
+import {enemiesGrid} from './enemies-grid-reducer'
 import {heroBullets} from './hero-bullets-reducer'
 import {enemyExplosions} from './enemy-explosions-reducer'
 import {controls} from './controls'
@@ -13,7 +13,7 @@ import {update} from './actions'
 import {Stage} from './stage.jsx'
 
 const spaceInvaders = combineReducers({
-  enemies
+  enemiesGrid
 , enemyExplosions
 , hero
 , heroBullets
