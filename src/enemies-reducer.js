@@ -62,14 +62,6 @@ const edges = enemies => {
   }, {}, enemies)
 }
 
-const updateStrafe = (state, action) => {
-
-}
-
-const updateAdvance = (state, action) => {
-
-}
-
 const update = (enemies, action) => {
   let { elapsedTime } = action
     , allDidMove = R.all(enemy => enemy.didMove, enemies)
@@ -78,17 +70,6 @@ const update = (enemies, action) => {
     , advance = allDidMove && atEdge
 
   if (advance) return defaultState
-
-  // if (advance) return enemies.map(enemy => {
-  //   let age = enemy.age + elapsedTime
-  //     , advance_ = age >= enemy.nextAdvanceTime
-  //     , nextAdvanceTime = advance ? Number.MAX_SAFE_INTEGER : enemy.nextAdvanceTime
-
-  //   return Object.assign({}, enemy, {
-  //     age
-  //   , didMove: true
-  //   })
-  // })
 
   return enemies.map(enemy => {
     let age = enemy.age + elapsedTime
