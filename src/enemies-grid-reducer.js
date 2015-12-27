@@ -17,22 +17,21 @@ import {
 , DESTROY_ENEMY
 } from './actions'
 
-const MOVE_0 = 'MOVE_0'
-    , MOVE_1 = 'MOVE_1'
-    , ADVANCE = 'ADVANCE'
-    , grid = createGrid(enemyRows, enemyCols)
-    , hStepSize = cellWidth / 6
-    , vStepSize = cellHeight / 2
-    , period = 80
-    , defaultMeta = {
-        leftmost: null
-      , rightmost: null
-      , atEdge: false
-      , operation: MOVE_0
-      , operationCompleted: true
-      }
+const STRAFE_0 = 'STRAFE_0'
+  , STRAFE_1 = 'STRAFE_1'
+  , ADVANCE = 'ADVANCE'
+  , grid = createGrid(enemyRows, enemyCols)
+  , hStepSize = cellWidth / 6
+  , vStepSize = cellHeight / 2
+  , period = 80
+  , defaultMeta = {
+      atEdge: false
+    , operation: STRAFE_0
+    , operationCompleted: true
+    }
+  , defaultState = reduceState(getDefaultEnemy, defaultMeta, grid.cells)
 
-export function enemiesGrid(state = getDefaultState(), action) {
+export function enemiesGrid(state = defaultState, action) {
   switch (action.type) {
     case DESTROY_ENEMY:
       return destroy(state, action)
@@ -44,7 +43,20 @@ export function enemiesGrid(state = getDefaultState(), action) {
 }
 
 function update(state, action) {
-  return getDefaultState()
+  const { elapsedTime } = action
+    , operation = getNextOperation(state.meta)
+    , meta = Object.assign({}, state.meta, { operation: operation })
+
+  switch (operation) {
+    case STRAFE_0:
+    case STRAFE_1:
+      return reduceState(strafe(elapsedTime, operation), meta, state.enemies)
+    case ADVANCE:
+      return reduceState(advance(elapsedTime, operation), meta, state.enemies)
+    default:
+      return state
+  }
+
   // let { elapsedTime } = action
   //   , { enemies } = state
   //   , allDidMove = R.all(enemy => enemy.didMove, enemies)
@@ -83,24 +95,39 @@ function destroy(state, action) {
   })
 }
 
-function getDefaultState() {
-  return grid.cells.reduce(({meta, enemies}, i) => {
-    const enemy = getDefaultEnemy(i)
-        , { leftmost, rightmost, action } = getEdges(meta, enemy)
-        , atEdge = meta.atEdge || atLeftEdge(leftmost) || atRightEdge(rightmost)
-        , operationCompleted = meta.operation == enemy.lastOperation
+const strafe = (elapsedTime, operation) => enemy => {
+  return enemy
+}
+
+const advance = (elapsedTime, operation) => enemy => {
+  return enemy
+}
+
+function reduceState(map, meta, collection) {
+
+  return R.reduce(reducer, { meta, enemies: [] }, collection)
+
+  function reducer({meta, enemies}, item) {
+    const enemy = map(item)
+      , { leftmost, rightmost } = getEdges(meta, enemy)
+      , atEdge = meta.atEdge || atLeftEdge(leftmost) || atRightEdge(rightmost)
+      , operationCompleted = meta.operation == enemy.lastOperation
+
+    enemies.push(enemy)
+
     return {
-      enemies: enemies.concat(enemy)
-    , meta: Object.assign({}, meta,
-        {
-          leftmost
-        , rightmost
-        , atEdge
-        , operationCompleted
-        }
-      )
+      enemies
+    , meta: Object.assign({}, meta, { atEdge, operationCompleted })
     }
-  }, { meta: defaultMeta, enemies: [] })
+  }
+}
+
+function getNextOperation(meta) {
+  const { operation, operationCompleted, atEdge } = meta
+  if (!operationCompleted) return operation
+  if (operationCompleted && !atEdge && operation == STRAFE_0) return STRAFE_1
+  if (operationCompleted && !atEdge && operation == STRAFE_1) return STRAFE_0
+  return ADVANCE
 }
 
 function getDefaultEnemy(i) {
@@ -111,15 +138,20 @@ function getDefaultEnemy(i) {
   , key: `enemy-${ i }`
   , type: row % 3
   , flip: false
-  , age: 0
   , didMove: true
   , hDirection: 1
-  , nextMoveTime: i * period
   , width: cellWidth
   , height: cellHeight
   , left: col * cellWidth + ((worldWidth - grid.cols * cellWidth) / 2)
   , top: grid.rows * cellHeight - row * cellHeight
-  , lastOperation: MOVE_0
+  , lastOperation: STRAFE_0
+  , nextMoveTime: i * period
+
+  , age: 0
+  , nextCellTime: i * period
+  , nextRowTime: row * period
+  , nextColTime: col * period
+
   }
 }
 
@@ -138,4 +170,3 @@ function getEdges(meta, enemy) {
   , rightmost: !rightmost ? enemy : enemy.col > rightmost.col ? enemy : rightmost
   })
 }
-
