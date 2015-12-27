@@ -50,9 +50,9 @@ function update(state, action) {
   switch (operation) {
     case STRAFE_0:
     case STRAFE_1:
-      return reduceState(strafe(elapsedTime, operation), meta, state.enemies)
+      return reduceState(strafe(elapsedTime, meta), meta, state.enemies)
     case ADVANCE:
-      return reduceState(advance(elapsedTime, operation), meta, state.enemies)
+      return reduceState(advance(elapsedTime, meta), meta, state.enemies)
     default:
       return state
   }
@@ -95,11 +95,11 @@ function destroy(state, action) {
   })
 }
 
-const strafe = (elapsedTime, operation) => enemy => {
+const strafe = (elapsedTime, meta) => enemy => {
   return enemy
 }
 
-const advance = (elapsedTime, operation) => enemy => {
+const advance = (elapsedTime, meta) => enemy => {
   return enemy
 }
 
