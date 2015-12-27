@@ -18,43 +18,23 @@ import {
 } from './actions'
 
 const grid = createGrid(enemyRows, enemyCols)
-const hStepSize = cellWidth / 6
-const vStepSize = cellHeight / 2
-const period = 80
-const defaultState = grid.cells.map(i => {
+    , hStepSize = cellWidth / 6
+    , vStepSize = cellHeight / 2
+    , period = 80
+    , defaultState = defaultEnemyGrid()
 
-  let {x, y} = grid.getCoords(i)
-
-  return {
-    key: `enemy-${ i }`
-  , type: y % 3
-  , flip: false
-  , age: 0
-  , didMove: true
-  , hDirection: 1
-  , nextMoveTime: i * period
-  , width: cellWidth
-  , height: cellHeight
-  , row: y
-  , col: x
-  , left: x * cellWidth + ((worldWidth - grid.cols * cellWidth) / 2)
-  , top: grid.rows * cellHeight - y * cellHeight
+export function enemies(state = defaultState, action) {
+  switch (action.type) {
+    case DESTROY_ENEMY:
+      return R.reject((e => e.key == action.enemy.key), state)
+     case UPDATE:
+      return update(state, action)
+    default:
+      return state
   }
-})
-
-const atLeftEdge = enemy => enemy.left <= cellWidth / 2
-const atRightEdge = enemy => enemy.left >= worldWidth - cellWidth - cellWidth / 2
-
-const edges = enemies => {
-  return R.reduce(({leftmost, rightmost}, enemy) => {
-    return {
-      leftmost: !leftmost ? enemy : enemy.col < leftmost.col ? enemy : leftmost
-    , rightmost: !rightmost ? enemy : enemy.col > rightmost.col ? enemy : rightmost
-    }
-  }, {}, enemies)
 }
 
-const update = (enemies, action) => {
+function update(enemies, action) {
   let { elapsedTime } = action
     , allDidMove = R.all(enemy => enemy.didMove, enemies)
     , {leftmost, rightmost} = edges(enemies)
@@ -84,14 +64,42 @@ const update = (enemies, action) => {
   })
 }
 
-export const enemies = (state = defaultState, action) => {
-  switch (action.type) {
-    case DESTROY_ENEMY:
-      return R.reject((e => e.key == action.enemy.key), state)
-     case UPDATE:
-      return update(state, action)
-    default:
-      return state
+function defaultEnemyGrid() {
+  return grid.cells.map(enemy)
+}
+
+function enemy(i) {
+  let { col, row } = grid.getCoords(i)
+  return {
+    row
+  , col
+  , key: `enemy-${ i }`
+  , type: row % 3
+  , flip: false
+  , age: 0
+  , didMove: true
+  , hDirection: 1
+  , nextMoveTime: i * period
+  , width: cellWidth
+  , height: cellHeight
+  , left: col * cellWidth + ((worldWidth - grid.cols * cellWidth) / 2)
+  , top: grid.rows * cellHeight - row * cellHeight
   }
 }
 
+function atLeftEdge(enemy) {
+  return enemy.left <= cellWidth / 2
+}
+
+function atRightEdge(enemy) {
+  return  enemy.left >= worldWidth - cellWidth - cellWidth / 2
+}
+
+function edges(enemies) {
+  return R.reduce(({leftmost, rightmost}, enemy) => {
+    return {
+      leftmost: !leftmost ? enemy : enemy.col < leftmost.col ? enemy : leftmost
+    , rightmost: !rightmost ? enemy : enemy.col > rightmost.col ? enemy : rightmost
+    }
+  }, {}, enemies)
+}
