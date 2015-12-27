@@ -26,21 +26,13 @@ const defaultState = grid.cells.map(i => {
   let {x, y} = grid.getCoords(i)
 
   return {
-
     key: `enemy-${ i }`
   , type: y % 3
   , flip: false
   , age: 0
   , didMove: true
-
   , hDirection: 1
   , nextMoveTime: i * period
-  , nextAdvanceTime: 0
-
-  // this really should depend on how many enemies are still alive
-  // and beatPeriod and beatFasterBy are two aspects of the same property
-  , nextAnimateTime: 0
-
   , width: cellWidth
   , height: cellHeight
   , row: y
@@ -75,7 +67,6 @@ const update = (enemies, action) => {
     let age = enemy.age + elapsedTime
       , move = age >= enemy.nextMoveTime
       , nextMoveTime = move ? age + (grid.length * period) : enemy.nextMoveTime
-      , nextAdvanceTime = age + enemy.row * period
       , left = move ? enemy.left + hStepSize * enemy.hDirection : enemy.left
       , flip = move ? !enemy.flip : enemy.flip
       , selected = enemy.key == leftmost.key || enemy.key == rightmost.key
@@ -87,7 +78,6 @@ const update = (enemies, action) => {
     , flip
     , selected
     , nextMoveTime
-    , nextAdvanceTime
     , didMove
     , didAdvance: false
     })
