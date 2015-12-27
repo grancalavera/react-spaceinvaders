@@ -21,7 +21,6 @@ const grid = createGrid(enemyRows, enemyCols)
 const hStepSize = cellWidth / 6
 const vStepSize = cellHeight / 2
 const period = 80
-
 const defaultState = grid.cells.map(i => {
 
   let {x, y} = grid.getCoords(i)
@@ -47,7 +46,7 @@ const defaultState = grid.cells.map(i => {
   , row: y
   , col: x
   , left: x * cellWidth + ((worldWidth - grid.cols * cellWidth) / 2)
-  , top: y * cellHeight + (cellHeight * 3)
+  , top: grid.rows * cellHeight - y * cellHeight
   }
 })
 
