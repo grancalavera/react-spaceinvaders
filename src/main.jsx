@@ -30,8 +30,6 @@ gameLoop(elapsedTime => {
   store.dispatch(update(elapsedTime))
   render()
   collisions(store)
-  // update beat
-  // beat(elapsedTime)
 })
 
 controls(store)
