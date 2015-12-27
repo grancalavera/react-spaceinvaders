@@ -21,12 +21,11 @@ const grid = createGrid(enemyRows, enemyCols)
     , hStepSize = cellWidth / 6
     , vStepSize = cellHeight / 2
     , period = 80
-    , defaultState = defaultEnemyGrid()
 
-export function enemiesGrid(state = defaultState, action) {
+export function enemiesGrid(state = getDefaultState(), action) {
   switch (action.type) {
     case DESTROY_ENEMY:
-      return R.reject((e => e.key == action.enemy.key), state)
+      return destroy(state, action)
      case UPDATE:
       return update(state, action)
     default:
@@ -34,38 +33,49 @@ export function enemiesGrid(state = defaultState, action) {
   }
 }
 
-function update(enemies, action) {
+function update(state, action) {
   let { elapsedTime } = action
+    , { enemies } = state
     , allDidMove = R.all(enemy => enemy.didMove, enemies)
     , {leftmost, rightmost} = edges(enemies)
     , atEdge = atLeftEdge(leftmost) || atRightEdge(rightmost)
     , advance = allDidMove && atEdge
 
-  if (advance) return defaultState
+  if (advance) return getDefaultState()
 
-  return enemies.map(enemy => {
-    let age = enemy.age + elapsedTime
-      , move = age >= enemy.nextMoveTime
-      , nextMoveTime = move ? age + (grid.length * period) : enemy.nextMoveTime
-      , left = move ? enemy.left + hStepSize * enemy.hDirection : enemy.left
-      , flip = move ? !enemy.flip : enemy.flip
-      , selected = enemy.key == leftmost.key || enemy.key == rightmost.key
-      , didMove = move || (allDidMove ? false : enemy.didMove)
+  return {
+    enemies: enemies.map(enemy => {
+      let age = enemy.age + elapsedTime
+        , move = age >= enemy.nextMoveTime
+        , nextMoveTime = move ? age + (grid.length * period) : enemy.nextMoveTime
+        , left = move ? enemy.left + hStepSize * enemy.hDirection : enemy.left
+        , flip = move ? !enemy.flip : enemy.flip
+        , selected = enemy.key == leftmost.key || enemy.key == rightmost.key
+        , didMove = move || (allDidMove ? false : enemy.didMove)
 
-    return Object.assign({}, enemy, {
-      age
-    , left
-    , flip
-    , selected
-    , nextMoveTime
-    , didMove
-    , didAdvance: false
+      return Object.assign({}, enemy, {
+        age
+      , left
+      , flip
+      , selected
+      , nextMoveTime
+      , didMove
+      , didAdvance: false
+      })
     })
+  }
+}
+
+function destroy(state, action) {
+  return Object.assign({}, state, {
+    enemies: R.reject((enemy => enemy.key == action.enemy.key), state.enemies)
   })
 }
 
-function defaultEnemyGrid() {
-  return grid.cells.map(enemy)
+function getDefaultState() {
+  return {
+    enemies: grid.cells.map(enemy)
+  }
 }
 
 function enemy(i) {

@@ -10,7 +10,7 @@ export const Stage = props => {
 
   return <div className="stage" style={{width: worldWidth, height: worldHeight}}>
 
-    {enemiesGrid.map(d => <Enemy
+    {enemiesGrid.enemies.map(d => <Enemy
       key={ d.key }
       top={ d.top }
       left={ d.left }
