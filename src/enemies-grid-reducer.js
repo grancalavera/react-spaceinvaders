@@ -21,14 +21,16 @@ const STRAFE_0 = 'STRAFE_0'
   , STRAFE_1 = 'STRAFE_1'
   , ADVANCE = 'ADVANCE'
   , grid = createGrid(enemyRows, enemyCols)
-  , hStepSize = cellWidth / 6
+  , hStepSize = cellWidth / 8
   , vStepSize = cellHeight / 2
-  , period = 80
+  , period = 200
   , defaultMeta = {
       atEdge: false
     , operation: STRAFE_0
     , operationCompleted: true
     , direction: 1
+    , leftmost: null
+    , rightmost: null
     }
   , defaultState = reduceState(getDefaultEnemy, defaultMeta, grid.cells)
 
@@ -56,15 +58,6 @@ function update(state, action) {
   }
 }
 
-function updateMeta(meta) {
-  const operation = getNextOperation(meta)
-      , direction = (meta.operation != operation && operation == ADVANCE)
-                      ? -meta.direction
-                      : meta.direction
-
-  return Object.assign({}, meta, { operation, direction })
-}
-
 function destroy(state, action) {
   return Object.assign({}, state, {
     enemies: R.reject((enemy => enemy.key == action.enemy.key), state.enemies)
@@ -72,12 +65,14 @@ function destroy(state, action) {
 }
 
 const strafe = (elapsedTime, meta) => enemy => {
+
   const age = enemy.age + elapsedTime
     , shouldDo = age >= enemy.nextCellTime
     , nextCellTime = shouldDo ? age + grid.length * period : enemy.nextCellTime
     , left = shouldDo ? enemy.left + hStepSize * meta.direction : enemy.left
     , flip = shouldDo ? !enemy.flip : enemy.flip
     , lastOperation = shouldDo ? meta.operation : enemy.lastOperation
+    , selected = enemy.key == meta.leftmost.key || enemy.key == meta.rightmost.key
 
   return Object.assign({}, enemy, {
     age
@@ -85,6 +80,7 @@ const strafe = (elapsedTime, meta) => enemy => {
   , flip
   , nextCellTime
   , lastOperation
+  , selected
   })
 }
 
@@ -106,17 +102,36 @@ function reduceState(map, meta, collection) {
 
     return {
       enemies
-    , meta: Object.assign({}, meta, { atEdge, operationCompleted })
+    , meta: Object.assign({}, meta, {
+        atEdge
+      , operationCompleted
+      , leftmost
+      , rightmost
+      })
     }
   }
+}
+
+function updateMeta(meta) {
+  const operation = getNextOperation(meta)
+      , direction = getNextDirection(meta)
+  return Object.assign({}, meta, { operation, direction })
 }
 
 function getNextOperation(meta) {
   const { operation, operationCompleted, atEdge } = meta
   if (!operationCompleted) return operation
-  if (operationCompleted && !atEdge && operation == STRAFE_0) return STRAFE_1
-  if (operationCompleted && !atEdge && operation == STRAFE_1) return STRAFE_0
+  // if (operationCompleted && !atEdge && operation == STRAFE_0) return STRAFE_1
+  // if (operationCompleted && !atEdge && operation == STRAFE_1) return STRAFE_0
+  if (operationCompleted && operation == STRAFE_0) return STRAFE_1
+  if (operationCompleted && operation == STRAFE_1) return STRAFE_0
   return ADVANCE
+}
+
+function getNextDirection(meta) {
+  const { operationCompleted, direction, atEdge } = meta
+  if (operationCompleted && atEdge) return -direction
+  return direction
 }
 
 function getDefaultEnemy(i) {
@@ -127,14 +142,11 @@ function getDefaultEnemy(i) {
   , key: `enemy-${ i }`
   , type: row % 3
   , flip: false
-  , didMove: true
-  , hDirection: 1
   , width: cellWidth
   , height: cellHeight
   , left: col * cellWidth + ((worldWidth - grid.cols * cellWidth) / 2)
   , top: grid.rows * cellHeight - row * cellHeight
   , lastOperation: STRAFE_0
-  , nextMoveTime: i * period
 
   , age: 0
   , nextCellTime: i * period
