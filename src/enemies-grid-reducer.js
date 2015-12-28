@@ -56,37 +56,6 @@ function update(state, action) {
     default:
       return state
   }
-
-  // let { elapsedTime } = action
-  //   , { enemies } = state
-  //   , allDidMove = R.all(enemy => enemy.didMove, enemies)
-  //   , {leftmost, rightmost} = getEdges(enemies)
-  //   , atEdge = atLeftEdge(leftmost) || atRightEdge(rightmost)
-  //   , advance = allDidMove && atEdge
-
-  // if (advance) return getDefaultState()
-
-  // return {
-  //   enemies: enemies.map(enemy => {
-  //     let age = enemy.age + elapsedTime
-  //       , move = age >= enemy.nextMoveTime
-  //       , nextMoveTime = move ? age + (grid.length * period) : enemy.nextMoveTime
-  //       , left = move ? enemy.left + hStepSize * enemy.hDirection : enemy.left
-  //       , flip = move ? !enemy.flip : enemy.flip
-  //       , selected = enemy.key == leftmost.key || enemy.key == rightmost.key
-  //       , didMove = move || (allDidMove ? false : enemy.didMove)
-
-  //     return Object.assign({}, enemy, {
-  //       age
-  //     , left
-  //     , flip
-  //     , selected
-  //     , nextMoveTime
-  //     , didMove
-  //     , didAdvance: false
-  //     })
-  //   })
-  // }
 }
 
 function destroy(state, action) {
