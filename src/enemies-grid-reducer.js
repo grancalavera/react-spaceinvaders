@@ -28,6 +28,7 @@ const STRAFE_0 = 'STRAFE_0'
       atEdge: false
     , operation: STRAFE_0
     , operationCompleted: true
+    , direction: 1
     }
   , defaultState = reduceState(getDefaultEnemy, defaultMeta, grid.cells)
 
@@ -43,16 +44,15 @@ export function enemiesGrid(state = defaultState, action) {
 }
 
 function update(state, action) {
-  const { elapsedTime } = action
-    , operation = getNextOperation(state.meta)
+  const operation = getNextOperation(state.meta)
     , meta = Object.assign({}, state.meta, { operation: operation })
 
   switch (operation) {
     case STRAFE_0:
     case STRAFE_1:
-      return reduceState(strafe(elapsedTime, meta), meta, state.enemies)
+      return reduceState(strafe(action.elapsedTime, meta), meta, state.enemies)
     case ADVANCE:
-      return reduceState(advance(elapsedTime, meta), meta, state.enemies)
+      return reduceState(advance(action.elapsedTime, meta), meta, state.enemies)
     default:
       return state
   }
@@ -96,7 +96,20 @@ function destroy(state, action) {
 }
 
 const strafe = (elapsedTime, meta) => enemy => {
-  return enemy
+  const age = enemy.age + elapsedTime
+    , shouldDo = age >= enemy.nextCellTime
+    , nextCellTime = shouldDo ? age + grid.length * period : enemy.nextCellTime
+    , left = shouldDo ? enemy.left + hStepSize * meta.direction : enemy.left
+    , flip = shouldDo ? !enemy.flip : enemy.flip
+    , lastOperation = shouldDo ? meta.operation : enemy.lastOperation
+
+  return Object.assign({}, enemy, {
+    age
+  , left
+  , flip
+  , nextCellTime
+  , lastOperation
+  })
 }
 
 const advance = (elapsedTime, meta) => enemy => {
