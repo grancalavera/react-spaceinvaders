@@ -44,10 +44,8 @@ export function enemiesGrid(state = defaultState, action) {
 }
 
 function update(state, action) {
-  const operation = getNextOperation(state.meta)
-    , meta = Object.assign({}, state.meta, { operation: operation })
-
-  switch (operation) {
+  const meta = updateMeta(state.meta)
+  switch (meta.operation) {
     case STRAFE_0:
     case STRAFE_1:
       return reduceState(strafe(action.elapsedTime, meta), meta, state.enemies)
@@ -56,6 +54,15 @@ function update(state, action) {
     default:
       return state
   }
+}
+
+function updateMeta(meta) {
+  const operation = getNextOperation(meta)
+      , direction = (meta.operation != operation && operation == ADVANCE)
+                      ? -meta.direction
+                      : meta.direction
+
+  return Object.assign({}, meta, { operation, direction })
 }
 
 function destroy(state, action) {
